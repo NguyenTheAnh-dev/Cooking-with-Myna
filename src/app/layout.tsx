@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
-import { Outfit } from 'next/font/google' // Changed to Outfit as requested "cute/fun" font (or similar modern/rounded)
+import { Be_Vietnam_Pro } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
 
-const font = Outfit({ subsets: ['latin'] })
+const font = Be_Vietnam_Pro({
+  subsets: ['latin', 'vietnamese'],
+  weight: ['300', '400', '500', '600', '700'],
+})
 
 export const metadata: Metadata = {
   title: 'Cooking with Myna - Multiplayer Cooking Game',
@@ -26,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body className={cn(font.className, "antialiased min-h-screen bg-background")}>
         {children}
       </body>

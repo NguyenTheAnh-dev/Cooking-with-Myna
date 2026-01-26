@@ -11,8 +11,8 @@ import { FormError } from '@/components/form/FormError'
 import { Button } from '@/components/ui/button'
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ROUTES } from '@/constants/routes'
+import { AuthLayout } from '@/components/layout/AuthLayout'
 
 export function LoginScreen() {
     const [error, setError] = useState<string | undefined>('')
@@ -37,49 +37,41 @@ export function LoginScreen() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-center">Đăng nhập</CardTitle>
-                    <CardDescription className="text-center">
-                        Chào mừng bạn quay trở lại!
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <FormProvider {...methods}>
-                        <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormInput
-                                name="email"
-                                label="Email"
-                                type="email"
-                                placeholder="name@example.com"
-                                disabled={isPending}
-                            />
-                            <FormPassword
-                                name="password"
-                                label="Mật khẩu"
-                                placeholder="******"
-                                disabled={isPending}
-                            />
-                            <FormError message={error} />
-                            <Button type="submit" className="w-full" disabled={isPending}>
-                                {isPending ? 'Đang xử lý...' : 'Đăng nhập'}
-                            </Button>
-                        </form>
-                    </FormProvider>
-                </CardContent>
-                <CardFooter className="flex flex-col gap-2 text-center text-sm">
-                    <Link href={ROUTES.AUTH.RESET_PASSWORD} className="text-blue-600 hover:underline">
-                        Quên mật khẩu?
-                    </Link>
-                    <div className="text-gray-500">
-                        Chưa có tài khoản?{' '}
-                        <Link href={ROUTES.AUTH.REGISTER} className="text-blue-600 hover:underline">
-                            Đăng ký ngay
-                        </Link>
-                    </div>
-                </CardFooter>
-            </Card>
-        </div>
+        <AuthLayout
+            title="Đăng nhập"
+        >
+            <FormProvider {...methods}>
+                <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormInput
+                        name="email"
+                        label="Email"
+                        type="email"
+                        placeholder="name@example.com"
+                        disabled={isPending}
+                    />
+                    <FormPassword
+                        name="password"
+                        label="Mật khẩu"
+                        placeholder="******"
+                        disabled={isPending}
+                    />
+                    <FormError message={error} />
+                    <Button type="submit" className="w-full" disabled={isPending}>
+                        {isPending ? 'Đang xử lý...' : 'Đăng nhập'}
+                    </Button>
+                </form>
+            </FormProvider>
+            <div className="mt-4 text-center text-sm">
+                <Link href={ROUTES.AUTH.RESET_PASSWORD} className="underline underline-offset-4 hover:text-primary">
+                    Quên mật khẩu?
+                </Link>
+            </div>
+            <div className="text-center text-sm">
+                Chưa có tài khoản?{' '}
+                <Link href={ROUTES.AUTH.REGISTER} className="underline underline-offset-4 hover:text-primary">
+                    Đăng ký ngay
+                </Link>
+            </div>
+        </AuthLayout>
     )
 }

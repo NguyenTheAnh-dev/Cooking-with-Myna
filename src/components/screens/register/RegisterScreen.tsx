@@ -11,10 +11,10 @@ import { FormError } from '@/components/form/FormError'
 import { Button } from '@/components/ui/button'
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { CheckCircle2 } from 'lucide-react'
 import { ROUTES } from '@/constants/routes'
+import { AuthLayout } from '@/components/layout/AuthLayout'
 
 export function RegisterScreen() {
     const [error, setError] = useState<string | undefined>('')
@@ -45,58 +45,51 @@ export function RegisterScreen() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-center">Đăng ký</CardTitle>
-                    <CardDescription className="text-center">
-                        Tạo tài khoản mới để bắt đầu
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {success ? (
-                        <Alert className="bg-green-50 border-green-200 text-green-800">
-                            <CheckCircle2 className="h-4 w-4 text-green-600" />
-                            <AlertTitle>Thành công!</AlertTitle>
-                            <AlertDescription>{success}</AlertDescription>
-                        </Alert>
-                    ) : (
-                        <FormProvider {...methods}>
-                            <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
-                                <FormInput
-                                    name="email"
-                                    label="Email"
-                                    type="email"
-                                    placeholder="name@example.com"
-                                    disabled={isPending}
-                                />
-                                <FormPassword
-                                    name="password"
-                                    label="Mật khẩu"
-                                    placeholder="******"
-                                    disabled={isPending}
-                                />
-                                <FormPassword
-                                    name="confirmPassword"
-                                    label="Xác nhận mật khẩu"
-                                    placeholder="******"
-                                    disabled={isPending}
-                                />
-                                <FormError message={error} />
-                                <Button type="submit" className="w-full" disabled={isPending}>
-                                    {isPending ? 'Đang xử lý...' : 'Đăng ký'}
-                                </Button>
-                            </form>
-                        </FormProvider>
-                    )}
-                </CardContent>
-                <CardFooter className="flex justify-center text-sm text-gray-500">
-                    Đã có tài khoản?{' '}
-                    <Link href={ROUTES.AUTH.LOGIN} className="text-blue-600 hover:underline ml-1">
-                        Đăng nhập
-                    </Link>
-                </CardFooter>
-            </Card>
-        </div>
+        <AuthLayout
+            title="Đăng ký"
+            description="Tạo tài khoản mới để bắt đầu"
+        >
+            {success ? (
+                <Alert className="bg-accent/15 border-accent text-accent-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-accent" />
+                    <AlertTitle>Thành công!</AlertTitle>
+                    <AlertDescription>{success}</AlertDescription>
+                </Alert>
+            ) : (
+                <FormProvider {...methods}>
+                    <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormInput
+                            name="email"
+                            label="Email"
+                            type="email"
+                            placeholder="name@example.com"
+                            disabled={isPending}
+                        />
+                        <FormPassword
+                            name="password"
+                            label="Mật khẩu"
+                            placeholder="******"
+                            disabled={isPending}
+                        />
+                        <FormPassword
+                            name="confirmPassword"
+                            label="Xác nhận mật khẩu"
+                            placeholder="******"
+                            disabled={isPending}
+                        />
+                        <FormError message={error} />
+                        <Button type="submit" className="w-full" disabled={isPending}>
+                            {isPending ? 'Đang xử lý...' : 'Đăng ký'}
+                        </Button>
+                    </form>
+                </FormProvider>
+            )}
+            <div className="mt-4 text-center text-sm">
+                Đã có tài khoản?{' '}
+                <Link href={ROUTES.AUTH.LOGIN} className="underline underline-offset-4 hover:text-primary">
+                    Đăng nhập
+                </Link>
+            </div>
+        </AuthLayout>
     )
 }

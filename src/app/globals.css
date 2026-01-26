@@ -34,105 +34,139 @@
 }
 
 :root {
-  /* Cute Kitchen Palette */
-  --color-primary-hex: #fadadd;
-  --color-secondary-hex: #ffb74d;
-  --color-accent-hex: #81c784;
-  --color-bg-hex: #fff5f7;
-  --color-text-hex: #4a4a4a;
+  /* ==============================================
+     LIGHT MODE - Neutral & Readable
+     Primary: #ec4899 (Pink)
+     ============================================== */
+  
+  /* Page Backgrounds - Soft neutral, not pure white */
+  --background: #fafafa;
+  --foreground: #1f2937;
 
-  --background: #fff5f7;
-  --foreground: #4a4a4a;
-
+  /* Card & Popover - Slightly warmer white */
   --card: #ffffff;
-  --card-foreground: #4a4a4a;
-
+  --card-foreground: #1f2937;
   --popover: #ffffff;
-  --popover-foreground: #4a4a4a;
+  --popover-foreground: #1f2937;
 
-  --primary: #fadadd;
-  --primary-foreground: #4a4a4a;
+  /* Primary Pink - #ec4899 */
+  --primary: #ec4899;
+  --primary-foreground: #ffffff;
 
-  --secondary: #ffb74d;
-  --secondary-foreground: #ffffff;
+  /* Secondary - Warm neutral for subtle actions */
+  --secondary: #f3f4f6;
+  --secondary-foreground: #374151;
 
-  --muted: #fef0f4;
-  --muted-foreground: #8a8a8a;
+  /* Muted - For disabled/subtle UI */
+  --muted: #f9fafb;
+  --muted-foreground: #6b7280;
 
-  --accent: #81c784;
+  /* Accent - Teal for complementary actions */
+  --accent: #14b8a6;
   --accent-foreground: #ffffff;
 
-  --destructive: #db5454;
+  /* Destructive - Error/Danger */
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
 
-  --border: #e6c8cd;
-  --input: #e6c8cd;
-  --ring: #ffb74d;
+  /* Borders & Inputs - Neutral gray, not pink */
+  --border: #d1d5db;
+  --input: #d1d5db;
+  --ring: #ec4899;
 
   --radius: 0.75rem;
 
-  /* Chart placeholders */
-  --chart-1: #ffb74d;
-  --chart-2: #81c784;
-  --chart-3: #fadadd;
-  --chart-4: #4a4a4a;
-  --chart-5: #ffd54f;
+  /* Semantic Colors */
+  --success: #16a34a;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #1f2937;
+  --info: #0ea5e9;
+  --info-foreground: #ffffff;
 
-  --sidebar: #fff5f7;
-  --sidebar-foreground: #4a4a4a;
-  --sidebar-primary: #fadadd;
-  --sidebar-primary-foreground: #4a4a4a;
-  --sidebar-accent: #81c784;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #fadadd;
-  --sidebar-ring: #ffb74d;
+  /* Chart Colors */
+  --chart-1: #ec4899;
+  --chart-2: #14b8a6;
+  --chart-3: #f59e0b;
+  --chart-4: #8b5cf6;
+  --chart-5: #06b6d4;
+
+  /* Sidebar */
+  --sidebar: #fafafa;
+  --sidebar-foreground: #1f2937;
+  --sidebar-primary: #ec4899;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f3f4f6;
+  --sidebar-accent-foreground: #374151;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #ec4899;
 }
 
 .dark {
-  /* Dark mode interpretation of Cute Kitchen */
-  --background: #2a2a2a;
-  --foreground: #fff5f7;
+  /* ==============================================
+     DARK MODE - Neutral & Easy on Eyes
+     Primary: #f472b6 (Lighter pink for dark bg)
+     ============================================== */
+  
+  /* Page Backgrounds - Soft dark, not pure black */
+  --background: #111827;
+  --foreground: #f3f4f6;
 
-  --card: #333333;
-  --card-foreground: #fff5f7;
+  /* Card & Popover - Slightly lighter */
+  --card: #1f2937;
+  --card-foreground: #f3f4f6;
+  --popover: #1f2937;
+  --popover-foreground: #f3f4f6;
 
-  --popover: #333333;
-  --popover-foreground: #fff5f7;
+  /* Primary Pink - Lighter for dark mode visibility */
+  --primary: #f472b6;
+  --primary-foreground: #1f2937;
 
-  /* Updated to darker pink for better text contrast while keeping cute vibe */
-  --primary: #f06292;
-  --primary-foreground: #ffffff;
+  /* Secondary */
+  --secondary: #374151;
+  --secondary-foreground: #f3f4f6;
 
-  --secondary: #ffb74d;
-  --secondary-foreground: #ffffff;
+  /* Muted */
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
 
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
+  /* Accent - Teal */
+  --accent: #2dd4bf;
+  --accent-foreground: #1f2937;
 
-  --accent: #66bb6a;
-  --accent-foreground: #ffffff;
-
-  --destructive: #ef5350;
+  /* Destructive */
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #f06292;
+  /* Borders & Inputs - Neutral gray */
+  --border: #4b5563;
+  --input: #4b5563;
+  --ring: #f472b6;
 
-  --chart-1: #ffb74d;
-  --chart-2: #81c784;
-  --chart-3: #fadadd;
-  --chart-4: #ffffff;
-  --chart-5: #ffd54f;
+  /* Semantic Colors */
+  --success: #22c55e;
+  --success-foreground: #1f2937;
+  --warning: #fbbf24;
+  --warning-foreground: #1f2937;
+  --info: #38bdf8;
+  --info-foreground: #1f2937;
 
-  --sidebar: #2a2a2a;
-  --sidebar-foreground: #fadadd;
-  --sidebar-primary: #fadadd;
-  --sidebar-primary-foreground: #4a4a4a;
-  --sidebar-accent: #333333;
-  --sidebar-accent-foreground: #fadadd;
-  --sidebar-border: #4a4a4a;
-  --sidebar-ring: #ffb74d;
+  /* Chart Colors */
+  --chart-1: #f472b6;
+  --chart-2: #2dd4bf;
+  --chart-3: #fbbf24;
+  --chart-4: #a78bfa;
+  --chart-5: #22d3ee;
+
+  /* Sidebar */
+  --sidebar: #111827;
+  --sidebar-foreground: #f3f4f6;
+  --sidebar-primary: #f472b6;
+  --sidebar-primary-foreground: #1f2937;
+  --sidebar-accent: #374151;
+  --sidebar-accent-foreground: #f3f4f6;
+  --sidebar-border: #374151;
+  --sidebar-ring: #f472b6;
 }
 
 @layer base {
