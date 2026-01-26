@@ -1,4 +1,4 @@
-import { useGamePhaseStore, GamePhase } from "@/store/gamePhase.store";
+import { useGamePhaseStore } from "@/store/gamePhase.store";
 
 /**
  * Hook to access and update the current game phase.
