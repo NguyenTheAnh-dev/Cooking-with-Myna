@@ -99,24 +99,25 @@
   --popover: #333333;
   --popover-foreground: #fff5f7;
 
-  --primary: #fadadd;
-  --primary-foreground: #4a4a4a;
+  /* Updated to darker pink for better text contrast while keeping cute vibe */
+  --primary: #f06292;
+  --primary-foreground: #ffffff;
 
   --secondary: #ffb74d;
   --secondary-foreground: #ffffff;
 
-  --muted: #3a3a3a;
-  --muted-foreground: #a0a0a0;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
 
-  --accent: #81c784;
+  --accent: #66bb6a;
   --accent-foreground: #ffffff;
 
-  --destructive: #8a3a3a;
+  --destructive: #ef5350;
   --destructive-foreground: #ffffff;
 
-  --border: #4a4a4a;
-  --input: #4a4a4a;
-  --ring: #ffb74d;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #f06292;
 
   --chart-1: #ffb74d;
   --chart-2: #81c784;
@@ -138,7 +139,24 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
   }
 }
