@@ -18,11 +18,13 @@ export async function loginAction(data: LoginInput) {
     return { success: false, message: error.message }
   }
 
-  revalidatePath(ROUTES.HOME, 'layout')
-  redirect(ROUTES.HOME)
+  revalidatePath(ROUTES.DASHBOARD, 'layout')
+  redirect(ROUTES.DASHBOARD)
 }
 
 export async function registerAction(data: RegisterInput) {
+  console.log('registerAction called with:', { email: data.email, hasPassword: !!data.password })
+  
   const supabase = await createClient()
 
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -30,30 +32,13 @@ export async function registerAction(data: RegisterInput) {
     password: data.password,
   })
 
+  console.log('signUp result:', { user: authData?.user?.id, error: authError?.message })
+
   if (authError) {
     return { success: false, message: authError.message }
   }
 
-  if (authData.user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', authData.user.id)
-      .single()
-
-    if (!profile) {
-      const { error: profileError } = await supabase.from('profiles').insert([
-        {
-          id: authData.user.id,
-          email: data.email,
-        },
-      ])
-
-      if (profileError) {
-        console.error('Error creating profile:', profileError)
-      }
-    }
-  }
+  // Profile is automatically created by database trigger (handle_new_user)
 
   return { success: true, message: 'Đăng ký thành công! Vui lòng kiểm tra email để xác nhận.' }
 }
@@ -61,7 +46,7 @@ export async function registerAction(data: RegisterInput) {
 export async function logoutAction() {
   const supabase = await createClient()
   await supabase.auth.signOut()
-  revalidatePath(ROUTES.HOME, 'layout')
+  revalidatePath(ROUTES.DASHBOARD, 'layout')
   redirect(ROUTES.AUTH.LOGIN)
 }
 
@@ -83,4 +68,19 @@ export async function getCurrentUser() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   return user
+}
+
+export async function resendConfirmationAction(email: string) {
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+  })
+
+  if (error) {
+    return { success: false, message: error.message }
+  }
+
+  return { success: true, message: 'Đã gửi lại email xác nhận. Vui lòng kiểm tra hộp thư.' }
 }

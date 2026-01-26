@@ -20,6 +20,7 @@ export function LoginScreen() {
 
     const methods = useForm<LoginInput>({
         resolver: zodResolver(LoginSchema),
+        mode: 'onChange',
         defaultValues: {
             email: '',
             password: '',

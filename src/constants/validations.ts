@@ -11,10 +11,11 @@ export const VALIDATION_MESSAGES = {
 } as const
 
 export const commonValidations = {
-  email: z.string().email({ message: VALIDATION_MESSAGES.EMAIL_INVALID }),
+  email: z
+    .string({ message: 'Vui lòng nhập email' })
+    .min(1, { message: 'Vui lòng nhập email' })
+    .email({ message: VALIDATION_MESSAGES.EMAIL_INVALID }),
   password: z
-    .string()
-    .min(8, { message: VALIDATION_MESSAGES.PASSWORD_MIN })
-    .regex(/[A-Z]/, { message: VALIDATION_MESSAGES.PASSWORD_UPPERCASE })
-    .regex(/[0-9]/, { message: VALIDATION_MESSAGES.PASSWORD_NUMBER }),
+    .string({ message: VALIDATION_MESSAGES.PASSWORD_REQUIRED })
+    .min(8, { message: VALIDATION_MESSAGES.PASSWORD_MIN }),
 }
