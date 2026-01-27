@@ -1,0 +1,64 @@
+{
+    "id": "level_3",
+    "name": "The Corridor",
+    "width": 1200,
+    "height": 800,
+    "entities": [
+        {
+            "id": "stove-3",
+            "type": "station",
+            "subtype": "stove",
+            "x": 100,
+            "y": 200
+        },
+        {
+            "id": "stove-4",
+            "type": "station",
+            "subtype": "stove",
+            "x": 300,
+            "y": 200
+        },
+        {
+            "id": "cut-2",
+            "type": "station",
+            "subtype": "cut",
+            "x": 500,
+            "y": 200
+        },
+        {
+            "id": "sink-2",
+            "type": "station",
+            "subtype": "sink",
+            "x": 700,
+            "y": 200
+        },
+        {
+            "id": "plate-2",
+            "type": "station",
+            "subtype": "plate",
+            "x": 900,
+            "y": 200
+        },
+        {
+            "id": "serve-2",
+            "type": "station",
+            "subtype": "serve",
+            "x": 1100,
+            "y": 200
+        },
+        {
+            "id": "cut-3",
+            "type": "station",
+            "subtype": "cut",
+            "x": 500,
+            "y": 600
+        },
+        {
+            "id": "stove-5",
+            "type": "station",
+            "subtype": "stove",
+            "x": 100,
+            "y": 600
+        }
+    ]
+}

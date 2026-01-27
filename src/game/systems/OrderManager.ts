@@ -10,11 +10,17 @@ export interface Order {
 export class OrderManager {
   private orders: Order[] = []
   private orderIdCounter = 0
-  private maxOrders = 3
+  private maxOrders = 4 // Default for 2 players
+  private generationInterval = 6000 // 6 seconds per order
 
-  constructor() {
+  constructor(difficultyMultiplier: number = 1) {
+    // Adjust based on difficulty/players
+    // E.g., multiplier 1 = Normal (2 players)
+    this.maxOrders = Math.floor(4 * difficultyMultiplier)
+    this.generationInterval = Math.floor(6000 / difficultyMultiplier)
+
     // Auto-generate orders for demo
-    setInterval(() => this.generateOrder(), 5000)
+    setInterval(() => this.generateOrder(), this.generationInterval)
   }
 
   public getOrders(): Order[] {

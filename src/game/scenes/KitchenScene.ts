@@ -5,6 +5,7 @@ import { Station } from '../entities/Station'
 import { OrderManager } from '../systems/OrderManager'
 import { TutorialManager } from '../tutorial/TutorialManager'
 import { setupBasicTutorial } from '../tutorial/steps/TutorialSequence'
+import { KitchenLoader } from '../editor/KitchenLoader'
 
 export class KitchenScene extends Container {
   public characterManager: CharacterManager
@@ -12,9 +13,13 @@ export class KitchenScene extends Container {
   public stations: Station[] = []
 
   public tutorialManager: TutorialManager
+  private currentLevel: any
 
-  constructor() {
+  constructor(levelConfig: any = null) {
     super()
+
+    // Default to level 1 if no config passed
+    this.currentLevel = levelConfig || require('../data/level_1.json')
 
     // 0. Setup Logic Systems
     this.orderManager = new OrderManager()
@@ -55,32 +60,36 @@ export class KitchenScene extends Container {
   }
 
   private setupStations() {
-    // Define layout
-    const layout = [
-      { id: 'stove-1', type: 'stove', x: 200, y: 200 },
-      { id: 'stove-2', type: 'stove', x: 500, y: 200 },
-      { id: 'cut-1', type: 'cut', x: 800, y: 200 },
-      { id: 'sink-1', type: 'sink', x: 200, y: 500 },
-      { id: 'plate-1', type: 'plate', x: 500, y: 500 },
-      { id: 'serve-1', type: 'serve', x: 800, y: 500 },
-    ] as const
+    // Load Level from config
+    const levelData = this.currentLevel
 
-    layout.forEach((cfg) => {
-      const station = new Station(cfg.id, cfg.type, cfg.x, cfg.y)
-      this.stations.push(station)
-      this.addChild(station)
+    // KitchenLoader returns "any[]" of created entities.
+    // We assume they are stations for now based on our simple schema.
+    const entities = KitchenLoader.load(this, levelData)
+
+    entities.forEach((e) => {
+      if (e instanceof Station) {
+        this.stations.push(e)
+      }
     })
   }
 
   private spawnPlayer() {
-    // Spawn local player for tutorial
-    this.characterManager.spawnCharacter({
-      id: 'player-1',
-      name: 'You',
-      startPosition: { x: 600, y: 600 },
-      speed: 250,
-      textureId: 'char-boy-1',
-      isAI: false,
+    // Spawn players based on config (hardcoded to 2 for now as requested)
+    const players = [
+      { id: 'player-1', name: 'Player 1', x: 400, y: 600, texture: 'char-boy-1' },
+      { id: 'player-2', name: 'Player 2', x: 800, y: 600, texture: 'char-girl-1' },
+    ]
+
+    players.forEach((p) => {
+      this.characterManager.spawnCharacter({
+        id: p.id,
+        name: p.name,
+        startPosition: { x: p.x, y: p.y },
+        speed: 250,
+        textureId: p.texture,
+        isAI: false,
+      })
     })
   }
 

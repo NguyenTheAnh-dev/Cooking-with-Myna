@@ -1,0 +1,64 @@
+{
+    "id": "level_6",
+    "name": "Dual Lines",
+    "width": 1200,
+    "height": 800,
+    "entities": [
+        {
+            "id": "l-1",
+            "type": "station",
+            "subtype": "stove",
+            "x": 300,
+            "y": 100
+        },
+        {
+            "id": "l-2",
+            "type": "station",
+            "subtype": "cut",
+            "x": 300,
+            "y": 300
+        },
+        {
+            "id": "l-3",
+            "type": "station",
+            "subtype": "sink",
+            "x": 300,
+            "y": 500
+        },
+        {
+            "id": "l-4",
+            "type": "station",
+            "subtype": "plate",
+            "x": 300,
+            "y": 700
+        },
+        {
+            "id": "r-1",
+            "type": "station",
+            "subtype": "serve",
+            "x": 900,
+            "y": 100
+        },
+        {
+            "id": "r-2",
+            "type": "station",
+            "subtype": "stove",
+            "x": 900,
+            "y": 300
+        },
+        {
+            "id": "r-3",
+            "type": "station",
+            "subtype": "cut",
+            "x": 900,
+            "y": 500
+        },
+        {
+            "id": "r-4",
+            "type": "station",
+            "subtype": "sink",
+            "x": 900,
+            "y": 700
+        }
+    ]
+}

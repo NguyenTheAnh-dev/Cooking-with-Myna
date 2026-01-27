@@ -1,0 +1,43 @@
+{
+    "id": "level_7",
+    "name": "Compact Box",
+    "width": 1200,
+    "height": 800,
+    "entities": [
+        {
+            "id": "b-1",
+            "type": "station",
+            "subtype": "stove",
+            "x": 500,
+            "y": 300
+        },
+        {
+            "id": "b-2",
+            "type": "station",
+            "subtype": "cut",
+            "x": 700,
+            "y": 300
+        },
+        {
+            "id": "b-3",
+            "type": "station",
+            "subtype": "sink",
+            "x": 500,
+            "y": 500
+        },
+        {
+            "id": "b-4",
+            "type": "station",
+            "subtype": "plate",
+            "x": 700,
+            "y": 500
+        },
+        {
+            "id": "b-5",
+            "type": "station",
+            "subtype": "serve",
+            "x": 600,
+            "y": 400
+        }
+    ]
+}
