@@ -1,15 +1,23 @@
-import { Container, Graphics } from 'pixi.js'
+import { Container, Graphics, Ticker } from 'pixi.js'
 import { CharacterManager } from '../managers/CharacterManager'
 import { GameLoop } from '../core/GameLoop'
 import { Station } from '../entities/Station'
-import { EventBus } from '../core/EventBus'
+import { OrderManager } from '../systems/OrderManager'
+import { TutorialManager } from '../tutorial/TutorialManager'
+import { setupBasicTutorial } from '../tutorial/steps/TutorialSequence'
 
 export class KitchenScene extends Container {
-  private characterManager: CharacterManager
-  private stations: Station[] = []
+  public characterManager: CharacterManager
+  public orderManager: OrderManager
+  public stations: Station[] = []
+
+  public tutorialManager: TutorialManager
 
   constructor() {
     super()
+
+    // 0. Setup Logic Systems
+    this.orderManager = new OrderManager()
 
     // 1. Setup Background & Stations
     this.drawBackground()
@@ -17,12 +25,20 @@ export class KitchenScene extends Container {
 
     // 2. Setup Managers
     this.characterManager = new CharacterManager(this)
+    this.tutorialManager = new TutorialManager(this)
 
     // 3. Spawn Initial Characters
-    this.spawnInitialCharacters()
+    // this.spawnInitialCharacters() // Disable AI for tutorial demo
+    this.spawnPlayer()
 
-    // 4. Start Demo Flow
-    this.startDemoSimulation()
+    // 4. Start Tutorial Demo Flow
+    setupBasicTutorial(this.tutorialManager)
+    this.tutorialManager.start()
+
+    // 5. Update Loop for Tutorial (UI/Logic)
+    Ticker.shared.add((ticker) => {
+      this.tutorialManager.update(ticker.deltaTime / 60)
+    })
   }
 
   public setupSystems(gameLoop: GameLoop) {
@@ -56,46 +72,34 @@ export class KitchenScene extends Container {
     })
   }
 
+  private spawnPlayer() {
+    // Spawn local player for tutorial
+    this.characterManager.spawnCharacter({
+      id: 'player-1',
+      name: 'You',
+      startPosition: { x: 600, y: 600 },
+      speed: 250,
+      textureId: 'char-boy-1',
+      isAI: false,
+    })
+  }
+
+  /*
   private spawnInitialCharacters() {
-    // Spawn 8 chars
-    const ids = ['boy-1', 'boy-2', 'boy-3', 'girl-1', 'girl-2', 'girl-3', 'girl-4', 'girl-5']
-    const avatars = [
-      'char-boy-1',
-      'char-boy-2',
-      'char-boy-3',
-      'char-girl-1',
-      'char-girl-2',
-      'char-girl-3',
-      'char-girl-4',
-      'char-girl-5',
-    ]
+    // Spawn AI NPCs
+    const ids = ['ai-chef-1', 'ai-chef-2']
+    const avatars = ['char-boy-1', 'char-girl-1']
 
     ids.forEach((id, i) => {
       this.characterManager.spawnCharacter({
         id,
         name: id,
-        startPosition: { x: 100 + i * 100, y: 700 - (i % 2) * 50 },
-        speed: 150 + Math.random() * 50,
+        startPosition: { x: 100 + i * 100, y: 600 },
+        speed: 200,
         textureId: avatars[i],
+        isAI: true,
       })
     })
   }
-
-  private startDemoSimulation() {
-    // Simulate inputs via EventBus to test ActionSystem
-    setInterval(() => {
-      const chars = this.characterManager.getAllCharacters()
-      const randomChar = chars[Math.floor(Math.random() * chars.length)]
-      const randomStation = this.stations[Math.floor(Math.random() * this.stations.length)]
-
-      if (randomChar && randomStation) {
-        // Dispatch MOVE event
-        EventBus.getInstance().emit('PLAYER_MOVE', {
-          characterId: randomChar.id,
-          x: randomStation.x,
-          y: randomStation.y + 60, // Stand in front
-        })
-      }
-    }, 2000)
-  }
+  */
 }

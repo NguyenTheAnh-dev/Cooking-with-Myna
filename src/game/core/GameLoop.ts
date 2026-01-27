@@ -37,6 +37,9 @@ export class GameLoop {
     const deltaTime = (now - this.lastTime) / 1000 // Seconds
     this.lastTime = now
 
+    // Pause Logic could go here (skip everything except UI)
+    // For now, we run systems normally but might want to slow them down
+
     this.update(deltaTime)
 
     requestAnimationFrame(this.loop)

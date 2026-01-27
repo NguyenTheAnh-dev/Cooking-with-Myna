@@ -13,6 +13,7 @@ export interface CharacterConfig {
   startPosition: Position
   speed?: number
   textureId: string // e.g., 'char-boy-1'
+  isAI?: boolean
 }
 
 export interface GameAsset {
