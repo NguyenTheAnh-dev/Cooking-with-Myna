@@ -5,6 +5,7 @@ import { MovementSystem } from '../systems/MovementSystem'
 
 export class GameLoop {
   private running: boolean = false
+  private paused: boolean = false
   private lastTime: number = 0
 
   // Systems
@@ -30,6 +31,10 @@ export class GameLoop {
     this.running = false
   }
 
+  public setPaused(paused: boolean) {
+    this.paused = paused
+  }
+
   private loop = () => {
     if (!this.running) return
 
@@ -37,10 +42,9 @@ export class GameLoop {
     const deltaTime = (now - this.lastTime) / 1000 // Seconds
     this.lastTime = now
 
-    // Pause Logic could go here (skip everything except UI)
-    // For now, we run systems normally but might want to slow them down
-
-    this.update(deltaTime)
+    if (!this.paused) {
+      this.update(deltaTime)
+    }
 
     requestAnimationFrame(this.loop)
   }

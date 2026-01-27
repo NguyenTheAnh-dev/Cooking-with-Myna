@@ -1,16 +1,28 @@
 import { EventBus } from '../core/EventBus'
 import { CharacterManager } from '../managers/CharacterManager'
 
+interface InputMovePayload {
+  x: number
+  y: number
+}
+
+interface MovePayload {
+  characterId: string
+  x: number
+  y: number
+}
+
 export class ActionSystem {
   private characterManager: CharacterManager | null = null
+  private filter: ((payload: MovePayload) => boolean) | null = null
 
   constructor() {
     const eventBus = EventBus.getInstance()
-    eventBus.on('PLAYER_MOVE', this.handleMove.bind(this))
-    eventBus.on('INPUT_MOVE', this.handleInputMove.bind(this))
+    eventBus.on('PLAYER_MOVE', (p) => this.handleMove(p))
+    eventBus.on('INPUT_MOVE', (p) => this.handleInputMove(p as InputMovePayload))
   }
 
-  private handleInputMove(payload: any) {
+  private handleInputMove(payload: InputMovePayload) {
     const localId = 'player-1'
     const { x, y } = payload
 
@@ -24,13 +36,11 @@ export class ActionSystem {
     }
   }
 
-  private filter: ((payload: any) => boolean) | null = null
-
   public setManager(manager: CharacterManager) {
     this.characterManager = manager
   }
 
-  public setFilter(filter: (payload: any) => boolean) {
+  public setFilter(filter: (payload: MovePayload) => boolean) {
     this.filter = filter
   }
 
@@ -39,19 +49,18 @@ export class ActionSystem {
   }
 
   public update(_dt: number) {
-    // eslint-disable-line @typescript-eslint/no-unused-vars
     // Check for held keys if implementing keyboard directly
   }
 
   private handleMove(payload: unknown) {
     // Payload: { characterId, x, y }
     if (!this.characterManager) return
-    if (this.filter && !this.filter(payload)) {
-      // console.log("Action blocked by tutorial filter")
+
+    const movePayload = payload as MovePayload
+    if (this.filter && !this.filter(movePayload)) {
       return
     }
 
-    const movePayload = payload as { characterId: string; x: number; y: number }
     const char = this.characterManager.getCharacter(movePayload.characterId)
     if (char) {
       char.targetPosition = { x: movePayload.x, y: movePayload.y }

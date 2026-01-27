@@ -1,6 +1,7 @@
 import { State } from '../StateMachine'
-import { NPCBrain } from '../NPCBrain'
+import type { NPCBrain } from '../NPCBrain'
 import { EventBus } from '../../core/EventBus'
+import { IdleState } from './IdleState'
 
 export class MoveToState implements State {
   name = 'move_to'
@@ -18,7 +19,6 @@ export class MoveToState implements State {
   enter(brain: NPCBrain) {
     brain.npc.setVisualState('walk')
 
-    // Issue move command via ActionSystem (simulated by EventBus)
     EventBus.getInstance().emit('PLAYER_MOVE', {
       characterId: brain.npc.id,
       x: this.targetX,
@@ -26,22 +26,20 @@ export class MoveToState implements State {
     })
   }
 
-  update(brain: NPCBrain, _dt: number) {
+  update(brain: NPCBrain) {
     const dx = brain.npc.x - this.targetX
     const dy = brain.npc.y - this.targetY
     const dist = Math.sqrt(dx * dx + dy * dy)
 
     if (dist < this.arrivalThreshold) {
-      brain.npc.velocity = { x: 0, y: 0 } // Stop
+      brain.npc.velocity = { x: 0, y: 0 }
       if (this.nextState) {
         brain.stateMachine.changeState(this.nextState)
       } else {
-        // Default to Idle if no next state
-        // In a complex tree, we might return Success
-        brain.stateMachine.changeState(new (require('./IdleState').IdleState)())
+        brain.stateMachine.changeState(new IdleState())
       }
     }
   }
 
-  exit(_brain: NPCBrain) {}
+  exit() {}
 }

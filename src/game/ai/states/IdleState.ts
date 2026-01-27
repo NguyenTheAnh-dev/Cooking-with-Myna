@@ -1,6 +1,6 @@
 import { State } from '../StateMachine'
-import { NPCBrain } from '../NPCBrain'
-// import { FindOrderState } from './FindOrderState'
+import type { NPCBrain } from '../NPCBrain'
+import { ProcessOrderState } from './ProcessOrderState'
 
 export class IdleState implements State {
   name = 'idle'
@@ -11,20 +11,16 @@ export class IdleState implements State {
     brain.npc.targetPosition = null
   }
 
-  update(brain: NPCBrain, _dt: number) {
+  update(brain: NPCBrain) {
     // Simple logic: If we have no order, look for one.
-    // In a real implementation this would transition to FindOrderState
-    // For now we just check direct perception
 
     const orders = brain.perception.findActiveOrders()
     if (orders.length > 0) {
       // Found order!
       brain.currentOrder = orders[0]
-      brain.stateMachine.changeState(
-        new (require('./ProcessOrderState').ProcessOrderState)(brain.currentOrder)
-      )
+      brain.stateMachine.changeState(new ProcessOrderState(brain.currentOrder))
     }
   }
 
-  exit(_brain: NPCBrain) {}
+  exit() {}
 }

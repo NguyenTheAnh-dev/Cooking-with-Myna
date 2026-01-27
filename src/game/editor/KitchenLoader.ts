@@ -1,11 +1,10 @@
 import { Container } from 'pixi.js'
-import { KitchenLayout, EntityConfig } from '../types/KitchenLayout'
+import { KitchenLayout } from '../types/KitchenLayout'
 import { Station, StationType } from '../entities/Station'
-// import { Wall } from '../entities/Wall' // Assuming we'll have this later
 
 export class KitchenLoader {
-  public static load(scene: Container, layout: KitchenLayout): any[] {
-    const loadedEntities: any[] = []
+  public static load(scene: Container, layout: KitchenLayout): Station[] {
+    const loadedEntities: Station[] = []
 
     layout.entities.forEach((config) => {
       if (config.type === 'station') {
@@ -13,13 +12,12 @@ export class KitchenLoader {
         scene.addChild(station)
         loadedEntities.push(station)
       }
-      // Add Wall/Obstacle handing here
     })
 
     return loadedEntities
   }
 
-  public static export(entities: any[], id: string = 'custom_level'): KitchenLayout {
+  public static export(entities: Station[], id: string = 'custom_level'): KitchenLayout {
     const layout: KitchenLayout = {
       id: id,
       name: 'Custom Kitchen',

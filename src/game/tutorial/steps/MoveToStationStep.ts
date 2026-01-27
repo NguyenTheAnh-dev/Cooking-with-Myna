@@ -1,5 +1,5 @@
 import { TutorialStep } from '../TutorialStep'
-import { StationType } from '../../entities/Station'
+import { Station, StationType } from '../../entities/Station'
 
 export class MoveToStationStep extends TutorialStep {
   private targetStationType: StationType
@@ -16,9 +16,8 @@ export class MoveToStationStep extends TutorialStep {
     if (!this.manager) return
 
     // Find the station
-    // Accessing scene via manager
     const stations = this.manager.getScene().stations
-    const target = stations.find((s: any) => s.type === this.targetStationType)
+    const target = stations.find((s: Station) => s.type === this.targetStationType)
 
     if (target) {
       this.targetId = target.id
@@ -29,13 +28,11 @@ export class MoveToStationStep extends TutorialStep {
   public update(_dt: number): boolean {
     if (!this.manager || !this.targetId) return false
 
-    // Check player player distance to station
-    // Assuming single local player for tutorial or taking the first one
     const player = this.manager.getScene().characterManager.getAllCharacters()[0]
     if (!player) return false
 
     const stations = this.manager.getScene().stations
-    const target = stations.find((s: any) => s.id === this.targetId)
+    const target = stations.find((s: Station) => s.id === this.targetId)
     if (!target) return false
 
     const dx = player.x - target.x

@@ -9,6 +9,8 @@ import { KitchenLoader } from '../editor/KitchenLoader'
 import { MobileHUD } from '../ui/MobileHUD'
 import { InputManager } from '../input/InputManager'
 import { KeyboardController } from '../input/KeyboardController'
+import { KitchenLayout } from '../types/KitchenLayout'
+import level1 from '../data/level_1.json'
 
 export class KitchenScene extends Container {
   public characterManager: CharacterManager
@@ -16,18 +18,18 @@ export class KitchenScene extends Container {
   public stations: Station[] = []
 
   public tutorialManager: TutorialManager
-  private currentLevel: any
+  private currentLevel: KitchenLayout
   // UI Layer
   private hudLayer: MobileHUD
 
-  constructor(levelConfig: any = null) {
+  constructor(levelConfig: KitchenLayout | null = null) {
     super()
 
     // Setup Inputs
     InputManager.getInstance().addController(new KeyboardController())
 
     // Default to level 1 if no config passed
-    this.currentLevel = levelConfig || require('../data/level_1.json')
+    this.currentLevel = levelConfig || (level1 as KitchenLayout)
 
     // 0. Setup Logic Systems
     this.orderManager = new OrderManager()

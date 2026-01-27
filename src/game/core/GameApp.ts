@@ -1,0 +1,54 @@
+import { Application } from 'pixi.js'
+import { KitchenScene } from '../scenes/KitchenScene'
+import { GameLoop } from './GameLoop'
+
+export class GameApp {
+  private static instance: GameApp
+  private app: Application
+  private gameLoop: GameLoop
+  private scene: KitchenScene | null = null
+
+  private constructor() {
+    this.app = new Application()
+    this.gameLoop = new GameLoop()
+  }
+
+  public static getInstance(): GameApp {
+    if (!GameApp.instance) {
+      GameApp.instance = new GameApp()
+    }
+    return GameApp.instance
+  }
+
+  public async initialize(container: HTMLElement) {
+    await this.app.init({
+      width: 1200,
+      height: 800,
+      backgroundColor: 0x1a1a2e,
+      resolution: window.devicePixelRatio || 1,
+      autoDensity: true,
+    })
+
+    container.appendChild(this.app.canvas)
+
+    // Load default level
+    this.scene = new KitchenScene()
+    this.app.stage.addChild(this.scene)
+    this.scene.setupSystems(this.gameLoop)
+
+    this.gameLoop.start()
+  }
+
+  public destroy() {
+    this.gameLoop.stop()
+    this.app.destroy(true, { children: true })
+  }
+
+  public getApp(): Application {
+    return this.app
+  }
+
+  public getScene(): KitchenScene | null {
+    return this.scene
+  }
+}

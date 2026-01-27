@@ -5,7 +5,7 @@ export class VirtualJoystick extends Container {
   private inner: Graphics
   private radius: number = 60
   private dragging: boolean = false
-  private data: any = null
+  private data: FederatedPointerEvent | null = null
 
   public value: { x: number; y: number } = { x: 0, y: 0 }
 

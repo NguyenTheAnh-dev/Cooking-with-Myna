@@ -78,11 +78,17 @@ export class EditableEntity extends Container {
     // We are essentially treating EditableEntity AS the entity in the editor scene
   }
 
-  public getEntityConfig(): any {
+  public getEntityConfig(): {
+    id: string
+    type: string
+    subtype: string
+    x: number
+    y: number
+  } | null {
     // Helper to extract data for export
     // Assume it's a station for now
     if ('id' in this.gameEntity && 'type' in this.gameEntity) {
-      const s = this.gameEntity as any
+      const s = this.gameEntity as { id: string; type: string }
       return {
         id: s.id,
         type: 'station',

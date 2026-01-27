@@ -57,24 +57,14 @@ export class EditorScene extends Container {
 
   public exportLevel() {
     // Unwrap entities to get their configs
-    // Note: EditableEntity.getEntityConfig is a helper we made
-    const configs = this.entities.map((e) => e.getEntityConfig())
+    const configs = this.entities
+      .map((e) => e.getEntityConfig())
+      .filter((c): c is NonNullable<typeof c> => c !== null)
 
-    const layout = KitchenLoader.export(
-      configs.map((c) => {
-        // Mocking the object expected by export, or we just construct layout directly here
-        return { ...c, id: c.id, type: c.subtype, x: c.x, y: c.y }
-        // Wait, KitchenLoader.export expects raw entities or configs?
-        // KitchenLoader.export expects "any[]" checking instanceof.
-        // Since we have the wrapper, we can't pass 'editable.gameEntity' directly because its X/Y is 0,0 relative to wrapper.
-        // Correct approach: Just build layout here manually or update KitchenLoader to accept configs.
-      })
-    )
-
-    // Let's redefine export slightly in our head or just do it here:
     const json = JSON.stringify(
       {
         id: 'custom_level',
+        name: 'Custom Kitchen',
         width: 1200,
         height: 800,
         entities: configs,

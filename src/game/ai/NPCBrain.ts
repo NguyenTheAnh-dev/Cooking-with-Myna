@@ -1,11 +1,9 @@
-import { AINPC } from '../entities/AINPC'
+import type { AINPC } from '../entities/AINPC'
 import { StateMachine } from './StateMachine'
 import { Perception } from './Perception'
 import { KitchenScene } from '../scenes/KitchenScene'
 import { Order } from '../systems/OrderManager'
-
-// Import States (Circular dep possible, handle carefully)
-import { IdleState } from './states/IdleState'
+import { IdleState } from './states'
 
 export class NPCBrain {
   public npc: AINPC

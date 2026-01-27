@@ -1,6 +1,6 @@
 import { State } from '../StateMachine'
-import { NPCBrain } from '../NPCBrain'
-import { EventBus } from '../../core/EventBus'
+import type { NPCBrain } from '../NPCBrain'
+import { IdleState } from './IdleState'
 
 export class InteractState implements State {
   name = 'interact'
@@ -14,28 +14,19 @@ export class InteractState implements State {
   }
 
   enter(brain: NPCBrain) {
-    // Determine interactions based on station?
-    // For now, visual feedback
-    brain.npc.setVisualState('cook') // Generic interaction anim
+    brain.npc.setVisualState('cook')
     this.timer = 0
-
-    // Emit interaction event if we had an InteractionSystem
-    // EventBus.getInstance().emit('PLAYER_INTERACT', { characterId: brain.npc.id })
   }
 
   update(brain: NPCBrain, dt: number) {
     this.timer += dt
     if (this.timer >= this.duration) {
-      // Interaction complete
-
-      // Logic to update inventory would happen here or via System response
-      // For this prototype, we'll manually simulate the result to keep the AI moving
       this.simulateInteractionResult(brain)
 
       if (this.nextState) {
         brain.stateMachine.changeState(this.nextState)
       } else {
-        brain.stateMachine.changeState(new (require('./IdleState').IdleState)())
+        brain.stateMachine.changeState(new IdleState())
       }
     }
   }
