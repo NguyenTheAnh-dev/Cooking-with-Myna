@@ -7,6 +7,21 @@ export class ActionSystem {
   constructor() {
     const eventBus = EventBus.getInstance()
     eventBus.on('PLAYER_MOVE', this.handleMove.bind(this))
+    eventBus.on('INPUT_MOVE', this.handleInputMove.bind(this))
+  }
+
+  private handleInputMove(payload: any) {
+    const localId = 'player-1'
+    const { x, y } = payload
+
+    const char = this.characterManager?.getCharacter(localId)
+    if (char) {
+      char.velocity = { x: x * char.speed, y: y * char.speed }
+
+      if (x !== 0 || y !== 0) {
+        char.targetPosition = null
+      }
+    }
   }
 
   private filter: ((payload: any) => boolean) | null = null

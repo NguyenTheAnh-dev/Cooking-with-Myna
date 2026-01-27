@@ -6,6 +6,9 @@ import { OrderManager } from '../systems/OrderManager'
 import { TutorialManager } from '../tutorial/TutorialManager'
 import { setupBasicTutorial } from '../tutorial/steps/TutorialSequence'
 import { KitchenLoader } from '../editor/KitchenLoader'
+import { MobileHUD } from '../ui/MobileHUD'
+import { InputManager } from '../input/InputManager'
+import { KeyboardController } from '../input/KeyboardController'
 
 export class KitchenScene extends Container {
   public characterManager: CharacterManager
@@ -14,9 +17,14 @@ export class KitchenScene extends Container {
 
   public tutorialManager: TutorialManager
   private currentLevel: any
+  // UI Layer
+  private hudLayer: MobileHUD
 
   constructor(levelConfig: any = null) {
     super()
+
+    // Setup Inputs
+    InputManager.getInstance().addController(new KeyboardController())
 
     // Default to level 1 if no config passed
     this.currentLevel = levelConfig || require('../data/level_1.json')
@@ -43,7 +51,12 @@ export class KitchenScene extends Container {
     // 5. Update Loop for Tutorial (UI/Logic)
     Ticker.shared.add((ticker) => {
       this.tutorialManager.update(ticker.deltaTime / 60)
+      InputManager.getInstance().update()
     })
+
+    // 6. Mobile HUD
+    this.hudLayer = new MobileHUD()
+    this.addChild(this.hudLayer)
   }
 
   public setupSystems(gameLoop: GameLoop) {
