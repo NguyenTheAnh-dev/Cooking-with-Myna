@@ -75,4 +75,28 @@ export class Perception {
     const dy = ty - this.npc.y
     return Math.sqrt(dx * dx + dy * dy)
   }
+
+  /**
+   * Check if there are dirty plates that need washing
+   */
+  public hasDirtyPlates(): boolean {
+    const dishManager = this.scene.dishManager
+    return dishManager ? dishManager.getDirtyPlateCount() > 0 : false
+  }
+
+  /**
+   * Check if clean plates are running low
+   */
+  public needsCleanPlates(): boolean {
+    const dishManager = this.scene.dishManager
+    if (!dishManager) return false
+    return dishManager.getCleanPlateCount() < 2 && dishManager.getDirtyPlateCount() > 0
+  }
+
+  /**
+   * Get the dish manager from scene
+   */
+  public getDishManager() {
+    return this.scene.dishManager ?? null
+  }
 }

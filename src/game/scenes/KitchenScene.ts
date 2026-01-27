@@ -1,5 +1,6 @@
 import { Container, Graphics, Ticker } from 'pixi.js'
 import { CharacterManager } from '../managers/CharacterManager'
+import { DishManager } from '../managers/DishManager'
 import { GameLoop } from '../core/GameLoop'
 import { Station } from '../entities/Station'
 import { OrderManager } from '../systems/OrderManager'
@@ -15,6 +16,7 @@ import level1 from '../data/level_1.json'
 export class KitchenScene extends Container {
   public characterManager: CharacterManager
   public orderManager: OrderManager
+  public dishManager: DishManager
   public stations: Station[] = []
 
   public tutorialManager: TutorialManager
@@ -40,6 +42,7 @@ export class KitchenScene extends Container {
 
     // 2. Setup Managers
     this.characterManager = new CharacterManager(this)
+    this.dishManager = new DishManager(this)
     this.tutorialManager = new TutorialManager(this)
 
     // 3. Spawn Initial Characters

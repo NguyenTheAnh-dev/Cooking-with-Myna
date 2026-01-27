@@ -17,6 +17,11 @@ export const SPRITE_ASSETS: GameAsset[] = [
   { alias: 'station-cutting', src: '/sprites/stations/cutting_board.png' },
   { alias: 'station-fridge', src: '/sprites/stations/fridge.png' },
   { alias: 'station-plate', src: '/sprites/stations/plate.png' },
+  { alias: 'station-sink', src: '/sprites/stations/sink.png' },
+
+  // Plates
+  { alias: 'plate-clean', src: '/sprites/items/clean_plate.png' },
+  { alias: 'plate-dirty', src: '/sprites/items/dirty_plate.png' },
 
   // Ingredients
   { alias: 'item-tomato', src: '/sprites/items/tomato.png' },
@@ -43,6 +48,8 @@ export const STATION_SPRITES: Record<string, string> = {
   cutting: 'station-cutting',
   fridge: 'station-fridge',
   plate: 'station-plate',
+  sink: 'station-sink',
+  dish_return: 'station-plate', // Reuse plate station sprite
 }
 
 // Character texture mapping (using existing characters)

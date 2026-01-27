@@ -3,6 +3,7 @@ import { StateMachine } from './StateMachine'
 import { Perception } from './Perception'
 import { KitchenScene } from '../scenes/KitchenScene'
 import { Order } from '../systems/OrderManager'
+import { Plate } from '../entities/Plate'
 import { IdleState } from './states'
 
 export class NPCBrain {
@@ -13,6 +14,7 @@ export class NPCBrain {
   // Memory
   public currentOrder: Order | null = null
   public targetStationId: string | null = null
+  public heldPlate: Plate | null = null // For dish washing
 
   // Configuration
   public reactionTime: number = 1000 // ms between major decisions
