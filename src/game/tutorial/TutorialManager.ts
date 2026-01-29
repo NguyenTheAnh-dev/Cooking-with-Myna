@@ -1,4 +1,3 @@
-import { Container } from 'pixi.js'
 import { TutorialStep } from './TutorialStep'
 import { TutorialOverlay } from './TutorialOverlay'
 import type { KitchenScene } from '../scenes/KitchenScene'
@@ -38,13 +37,13 @@ export class TutorialManager {
     }
   }
 
-  public update(dt: number) {
+  public update() {
     if (!this.isActive) return
 
     const currentStep = this.steps[this.currentStepIndex]
     if (currentStep) {
-      const isComplete = currentStep.update(dt)
-      if (isComplete) {
+      const completed = currentStep.update()
+      if (completed) {
         this.advanceStep()
       }
     }

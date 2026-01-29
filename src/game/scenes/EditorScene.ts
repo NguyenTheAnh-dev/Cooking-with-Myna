@@ -1,7 +1,6 @@
 import { Container, Graphics } from 'pixi.js'
 import { EditableEntity } from '../editor/EditableEntity'
 import { Station, StationType } from '../entities/Station'
-import { KitchenLoader } from '../editor/KitchenLoader'
 
 export class EditorScene extends Container {
   public editorLayer: Container

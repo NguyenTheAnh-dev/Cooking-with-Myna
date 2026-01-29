@@ -44,8 +44,9 @@ export class KitchenScene extends Container {
     setupBasicTutorial(this.tutorialManager)
     this.tutorialManager.start()
 
-    Ticker.shared.add((ticker) => {
-      this.tutorialManager.update(ticker.deltaTime / 60)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Ticker.shared.add((_ticker) => {
+      this.tutorialManager.update()
       InputManager.getInstance().update()
     })
 
@@ -64,6 +65,7 @@ export class KitchenScene extends Container {
     floor.fill(0xececec)
     this.addChild(floor)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const bgKey = (this.currentLevel as any).background || 'bg_level_1'
 
     try {
@@ -74,7 +76,7 @@ export class KitchenScene extends Container {
         bgSprite.height = 800
         this.addChild(bgSprite)
       }
-    } catch (e) {
+    } catch {
       console.warn('Background image not found:', bgKey)
     }
   }

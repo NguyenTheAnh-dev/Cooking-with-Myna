@@ -1,8 +1,8 @@
 import { EventBus } from '../core/EventBus'
 import { CharacterManager } from '../managers/CharacterManager'
 import { DishManager } from '../managers/DishManager'
+import { Station } from '../entities/Station'
 import { Plate } from '../entities/Plate'
-import { Station, StationType } from '../entities/Station'
 
 interface InputMovePayload {
   x: number
@@ -110,10 +110,10 @@ export class ActionSystem {
         this.handleSinkInteract(payload.characterId, nearestStation)
         break
       case 'dish_return':
-        this.handleDishReturnInteract(payload.characterId, nearestStation)
+        this.handleDishReturnInteract(payload.characterId)
         break
       case 'plate':
-        this.handlePlateStationInteract(payload.characterId, nearestStation)
+        this.handlePlateStationInteract(payload.characterId)
         break
       default:
         // Other station interactions handled elsewhere
@@ -163,7 +163,7 @@ export class ActionSystem {
     }
   }
 
-  private handleDishReturnInteract(characterId: string, _station: Station) {
+  private handleDishReturnInteract(characterId: string) {
     // Pick up dirty dish from return point
     if (this.dishManager) {
       const dirtyPlate = this.dishManager.pickupDirtyPlate()
@@ -179,7 +179,7 @@ export class ActionSystem {
     }
   }
 
-  private handlePlateStationInteract(characterId: string, _station: Station) {
+  private handlePlateStationInteract(characterId: string) {
     // Get clean plate from plate station
     if (this.dishManager && this.dishManager.hasCleanPlates()) {
       const cleanPlate = this.dishManager.getCleanPlate()

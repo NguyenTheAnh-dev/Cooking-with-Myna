@@ -23,7 +23,7 @@ export class InteractionStep extends TutorialStep {
     this.cleanup = () => eb.off(this.eventName, handler)
   }
 
-  public update(_dt: number): boolean {
+  public update(): boolean {
     return this.triggered
   }
 

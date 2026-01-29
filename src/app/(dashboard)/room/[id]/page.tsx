@@ -5,7 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ChefHat, Copy } from "lucide-react";
 
-export default function LobbyPage() {
+interface RoomPageProps {
+    params: {
+        id: string
+    }
+}
+
+export default function RoomPage({ params }: RoomPageProps) {
+    const roomId = params.id ? params.id.toUpperCase() : 'UNKNOWN'
+
     return (
         <>
             <Header />
@@ -19,7 +27,7 @@ export default function LobbyPage() {
                             </CardHeader>
                             <CardContent className="flex flex-col items-center gap-4">
                                 <div className="text-5xl font-mono font-bold tracking-widest text-foreground bg-background px-6 py-4 rounded-xl border border-dashed border-input relative group cursor-pointer hover:bg-accent/5 transition-colors">
-                                    AX92
+                                    {roomId}
                                     <Copy className="absolute right-2 top-2 h-4 w-4 text-muted-foreground opacity-50 group-hover:opacity-100" />
                                 </div>
                                 <Badge variant="secondary" className="px-3 py-1 text-sm">
@@ -28,7 +36,8 @@ export default function LobbyPage() {
                             </CardContent>
                         </Card>
 
-                        <Button size="lg" className="w-full h-14 text-xl shadow-lg animate-pulse">
+                        <div className="flex-1"></div>
+                        <Button size="lg" className="w-full h-14 text-xl shadow-lg animate-pulse mt-auto">
                             Start Cooking!
                         </Button>
                     </div>

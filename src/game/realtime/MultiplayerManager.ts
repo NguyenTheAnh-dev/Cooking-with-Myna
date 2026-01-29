@@ -167,7 +167,7 @@ export class MultiplayerManager {
 
     // If host, send current game state
     if (this.isHost) {
-      this.sendGameStateToNewPlayer(data.playerId)
+      this.sendGameStateToNewPlayer()
     }
   }
 
@@ -177,7 +177,7 @@ export class MultiplayerManager {
     // Note: CharacterManager would need a removeCharacter method
   }
 
-  private sendGameStateToNewPlayer(_playerId: string) {
+  private sendGameStateToNewPlayer() {
     // Host broadcasts full game state for new player to sync
     // This would include all player positions, orders, score, etc.
     const state: GameStateSync = {

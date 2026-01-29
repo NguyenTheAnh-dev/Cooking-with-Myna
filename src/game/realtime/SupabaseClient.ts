@@ -47,6 +47,7 @@ export class SupabaseClient extends RealtimeAdapter {
     })
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public on(_event: string, _callback: (payload: unknown) => void) {
     // Implementation would hook into channel or listener map if needed directly
   }

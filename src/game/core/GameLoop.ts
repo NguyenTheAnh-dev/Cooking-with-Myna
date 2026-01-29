@@ -53,7 +53,7 @@ export class GameLoop {
     // ECS-like update order
     this.actionSystem.update(dt)
     this.movementSystem.update(dt)
-    this.collisionSystem.update(dt)
-    this.cookingSystem.update(dt)
+    this.collisionSystem.update()
+    this.cookingSystem.update()
   }
 }

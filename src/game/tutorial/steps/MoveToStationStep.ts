@@ -25,7 +25,7 @@ export class MoveToStationStep extends TutorialStep {
     }
   }
 
-  public update(_dt: number): boolean {
+  public update(): boolean {
     if (!this.manager || !this.targetId) return false
 
     const player = this.manager.getScene().characterManager.getAllCharacters()[0]

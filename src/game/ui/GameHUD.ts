@@ -62,7 +62,7 @@ export class GameHUD extends Container {
 
   public update(dt: number) {
     this.timer.update(dt)
-    this.scoreDisplay.update(dt)
+    this.scoreDisplay.update()
   }
 
   public startGame() {

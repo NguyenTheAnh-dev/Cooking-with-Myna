@@ -37,6 +37,7 @@ export class WashDishState implements State {
     )
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(_brain: NPCBrain, _dt: number) {
     // Main state just delegates to sub-phases
   }
@@ -55,7 +56,8 @@ class WashDishPickupState implements State {
     brain.npc.velocity = { x: 0, y: 0 }
   }
 
-  update(brain: NPCBrain) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  update(brain: NPCBrain, _dt: number) {
     // Try to pick up dirty plate
     const dishManager = brain.perception.getDishManager()
     if (!dishManager) {

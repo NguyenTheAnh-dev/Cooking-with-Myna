@@ -137,7 +137,7 @@ export class DishManager {
     return this.plates.get(id) ?? null
   }
 
-  public update(_dt: number) {
+  public update() {
     // Update any animations or visual states
     // Plates in washing state are updated by the character holding them
   }

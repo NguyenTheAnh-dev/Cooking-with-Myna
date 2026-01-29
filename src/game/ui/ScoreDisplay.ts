@@ -50,7 +50,7 @@ export class ScoreDisplay extends Container {
     this.scoreText.text = this.score.toString()
   }
 
-  public update(_dt: number) {
+  public update() {
     // Smooth score counting animation
     if (this.score < this.targetScore) {
       const diff = this.targetScore - this.score
@@ -76,9 +76,7 @@ export class ScoreDisplay extends Container {
     this.addChild(popup)
 
     // Animate popup
-    let frame = 0
     const animate = () => {
-      frame++
       popup.y -= 2
       popup.alpha -= 0.03
 

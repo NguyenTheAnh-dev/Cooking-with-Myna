@@ -1,4 +1,4 @@
-import { Container, Graphics, FederatedPointerEvent, Text, TextStyle } from 'pixi.js'
+import { Container, Graphics, Text, TextStyle } from 'pixi.js'
 
 export class ActionButton extends Container {
   private bg: Graphics

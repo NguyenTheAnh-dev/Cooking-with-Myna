@@ -92,7 +92,6 @@ export class ResultScreen extends Container {
 
     const starSize = 40
     const spacing = 50
-    const totalWidth = 3 * spacing
 
     for (let i = 0; i < 3; i++) {
       const star = new Text({

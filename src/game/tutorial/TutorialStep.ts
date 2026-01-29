@@ -20,7 +20,7 @@ export abstract class TutorialStep {
   }
 
   // Called every frame. Return true if step is complete.
-  public update(_dt: number): boolean {
+  public update(): boolean {
     return false
   }
 

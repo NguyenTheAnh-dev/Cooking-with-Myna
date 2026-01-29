@@ -1,6 +1,5 @@
 export class CollisionSystem {
-  public update(_dt: number) {
-    // eslint-disable-line @typescript-eslint/no-unused-vars
+  public update() {
     // Check collisions between characters and stations
   }
 }

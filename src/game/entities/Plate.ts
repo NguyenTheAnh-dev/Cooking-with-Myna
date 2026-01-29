@@ -1,4 +1,4 @@
-import { Container, Graphics, Sprite, Assets } from 'pixi.js'
+import { Container, Graphics } from 'pixi.js'
 
 export type PlateState = 'clean' | 'dirty' | 'washing'
 

@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation'
 import { ROUTES } from '@/constants/routes'
 import { logoutAction } from '@/app/actions/auth'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { ChefHat, Users, User, Settings, LogOut, Play, Trophy, BookOpen } from 'lucide-react'
-import Link from 'next/link'
+import { Card, CardContent } from '@/components/ui/card'
+import { ChefHat, Settings, LogOut, Trophy, BookOpen } from 'lucide-react'
+import { DashboardClient } from './DashboardClient'
 
 export default async function DashboardPage() {
     const supabase = await createClient()
@@ -56,51 +56,7 @@ export default async function DashboardPage() {
                     </div>
 
                     {/* Game Mode Cards */}
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {/* Solo Play */}
-                        <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50 overflow-hidden relative">
-                            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                            <CardHeader className="pb-2">
-                                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center mb-2">
-                                    <User className="h-6 w-6 text-white" />
-                                </div>
-                                <CardTitle className="text-2xl">Chơi Solo</CardTitle>
-                                <CardDescription>
-                                    Luyện tập kỹ năng nấu ăn một mình với AI hỗ trợ
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Link href="/game">
-                                    <Button size="lg" className="w-full h-14 text-lg">
-                                        <Play className="h-5 w-5 mr-2" />
-                                        Bắt đầu chơi
-                                    </Button>
-                                </Link>
-                            </CardContent>
-                        </Card>
-
-                        {/* Multiplayer */}
-                        <Card className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-accent/50 overflow-hidden relative">
-                            <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                            <CardHeader className="pb-2">
-                                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center mb-2">
-                                    <Users className="h-6 w-6 text-white" />
-                                </div>
-                                <CardTitle className="text-2xl">Chơi cùng bạn bè</CardTitle>
-                                <CardDescription>
-                                    Tham gia hoặc tạo phòng để nấu ăn cùng bạn bè
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Link href="/lobby">
-                                    <Button size="lg" variant="outline" className="w-full h-14 text-lg border-2 hover:bg-accent/10">
-                                        <Users className="h-5 w-5 mr-2" />
-                                        Vào Lobby
-                                    </Button>
-                                </Link>
-                            </CardContent>
-                        </Card>
-                    </div>
+                    <DashboardClient />
 
                     {/* Secondary Actions */}
                     <div className="grid grid-cols-3 gap-4">

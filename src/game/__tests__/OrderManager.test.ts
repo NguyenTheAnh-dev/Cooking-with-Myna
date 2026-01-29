@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { OrderManager, Order } from '../systems/OrderManager'
+import { OrderManager } from '../systems/OrderManager'
 
 describe('OrderManager', () => {
   let orderManager: OrderManager
