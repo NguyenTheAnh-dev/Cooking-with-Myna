@@ -16,6 +16,10 @@ export class Character extends Container {
   // Target for pathfinding
   public targetPosition: { x: number; y: number } | null = null
 
+  // Network interpolation targets
+  public targetX?: number
+  public targetY?: number
+
   private readonly CHARACTER_SCALE = 0.5
 
   constructor(id: string, textureId: string, speed: number = 200) {
@@ -45,5 +49,20 @@ export class Character extends Container {
   public setDirection(dir: Direction) {
     this.direction = dir
     this.sprite.scale.x = dir === 'left' ? -this.CHARACTER_SCALE : this.CHARACTER_SCALE
+  }
+  public playAnimation(anim: string) {
+    // Placeholder for animation logic
+    // In real implementation, this would switch textures or play AnimatedSprite
+    if (anim === 'walk') {
+      // simple bobbing
+      this.sprite.y = -Math.abs(Math.sin(Date.now() / 100)) * 5
+    } else {
+      this.sprite.y = 0
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public update(_dt: number) {
+    // Base update logic
   }
 }

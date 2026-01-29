@@ -2,7 +2,12 @@
 
 import React, { useEffect, useRef } from 'react'
 
-export default function GameCanvas() {
+interface GameCanvasProps {
+  roomId?: string | null
+  playerId?: string
+}
+
+export default function GameCanvas({ roomId = null, playerId = 'guest-' + Math.floor(Math.random() * 1000) }: GameCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -14,8 +19,10 @@ export default function GameCanvas() {
 
       const { GameApp } = await import('@/game/core/GameApp')
       gameApp = GameApp.getInstance()
-      await (gameApp as { initialize: (el: HTMLElement) => Promise<void> }).initialize(
-        containerRef.current
+      await (gameApp as { initialize: (el: HTMLElement, roomId: string | null, playerId: string) => Promise<void> }).initialize(
+        containerRef.current,
+        roomId,
+        playerId
       )
     }
 
@@ -23,10 +30,10 @@ export default function GameCanvas() {
 
     return () => {
       if (gameApp) {
-        ;(gameApp as { destroy: () => void }).destroy()
+        ; (gameApp as { destroy: () => void }).destroy()
       }
     }
-  }, [])
+  }, [roomId, playerId])
 
   return <div ref={containerRef} className="w-full h-screen bg-slate-900 overflow-hidden" />
 }

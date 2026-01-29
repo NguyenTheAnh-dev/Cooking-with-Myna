@@ -20,7 +20,11 @@ export class GameApp {
     return GameApp.instance
   }
 
-  public async initialize(container: HTMLElement) {
+  public async initialize(
+    container: HTMLElement,
+    roomId: string | null = null,
+    playerId: string = 'local-player'
+  ) {
     await this.app.init({
       width: 1200,
       height: 800,
@@ -31,8 +35,8 @@ export class GameApp {
 
     container.appendChild(this.app.canvas)
 
-    // Load default level
-    this.scene = new KitchenScene()
+    // Load default level (with room info)
+    this.scene = new KitchenScene(roomId, playerId)
     this.app.stage.addChild(this.scene)
     this.scene.setupSystems(this.gameLoop)
 

@@ -1,5 +1,7 @@
 'use client'
 
+import Link from "next/link";
+
 import { Header } from "@/components/common/Header";
 import { GameContainer } from "@/components/common/GameContainer";
 import { Button } from "@/components/ui/button";
@@ -35,9 +37,11 @@ export function RoomScreen({ roomId }: RoomScreenProps) {
                         </Card>
 
                         <div className="flex-1"></div>
-                        <Button size="lg" className="w-full h-14 text-xl shadow-lg animate-pulse mt-auto">
-                            Start Cooking!
-                        </Button>
+                        <Link href={`/game?roomId=${roomId}`} className="w-full">
+                            <Button size="lg" className="w-full h-14 text-xl shadow-lg animate-pulse mt-auto">
+                                Start Cooking!
+                            </Button>
+                        </Link>
                     </div>
 
                     {/* Player List */}
