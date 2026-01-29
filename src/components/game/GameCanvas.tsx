@@ -5,9 +5,10 @@ import React, { useEffect, useRef } from 'react'
 interface GameCanvasProps {
   roomId?: string | null
   playerId?: string
+  characterId?: string
 }
 
-export default function GameCanvas({ roomId = null, playerId = 'guest-' + Math.floor(Math.random() * 1000) }: GameCanvasProps) {
+export default function GameCanvas({ roomId = null, playerId = 'guest-' + Math.floor(Math.random() * 1000), characterId }: GameCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -19,10 +20,11 @@ export default function GameCanvas({ roomId = null, playerId = 'guest-' + Math.f
 
       const { GameApp } = await import('@/game/core/GameApp')
       gameApp = GameApp.getInstance()
-      await (gameApp as { initialize: (el: HTMLElement, roomId: string | null, playerId: string) => Promise<void> }).initialize(
+      await (gameApp as { initialize: (el: HTMLElement, roomId: string | null, playerId: string, characterId?: string) => Promise<void> }).initialize(
         containerRef.current,
         roomId,
-        playerId
+        playerId,
+        characterId
       )
     }
 

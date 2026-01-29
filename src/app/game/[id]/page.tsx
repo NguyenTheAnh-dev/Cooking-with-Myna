@@ -6,9 +6,12 @@ interface GamePageProps {
     params: {
         id: string
     }
+    searchParams: {
+        character?: string
+    }
 }
 
-export default async function GamePage({ params }: GamePageProps) {
+export default async function GamePage({ params, searchParams }: GamePageProps) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -16,5 +19,5 @@ export default async function GamePage({ params }: GamePageProps) {
         redirect("/login");
     }
 
-    return <GameScreen roomId={params.id} playerId={user.id} />;
+    return <GameScreen roomId={params.id} playerId={user.id} characterId={searchParams.character} />;
 }

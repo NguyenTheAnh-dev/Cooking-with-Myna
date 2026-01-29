@@ -28,7 +28,12 @@ export class KitchenScene extends Container {
 
   private updateTimer: number = 0
 
-  constructor(roomId: string | null, playerId: string, levelConfig: KitchenLayout | null = null) {
+  constructor(
+    roomId: string | null,
+    playerId: string,
+    levelConfig: KitchenLayout | null = null,
+    characterId?: string
+  ) {
     super()
 
     // Setup Managers
@@ -60,10 +65,16 @@ export class KitchenScene extends Container {
 
       this.realtimeManager.onPlayerJoin = (id) => {
         console.log('Remote player joined:', id)
+        // We'll spawn them, but we need their character ID.
+        // For now, spawn with default, update later via broadcast?
+        // Or wait for 'sync' state?
+        // RealtimeManager 'sync' event handles state updates.
+        // Actually, onPlayerJoin is just a trigger. we rely on state updates.
         this.characterManager.spawnRemoteCharacter(id, 400, 600)
       }
 
       this.realtimeManager.onPlayerStateUpdate = (state) => {
+        // Handle textureId update if passed (not yet in state payload, but good future proof)
         this.characterManager.updateRemoteCharacter(
           state.id,
           state.x,
@@ -81,7 +92,7 @@ export class KitchenScene extends Container {
       }
     }
 
-    this.spawnPlayer(playerId)
+    this.spawnPlayer(playerId, characterId)
 
     setupBasicTutorial(this.tutorialManager)
     this.tutorialManager.start()
@@ -148,14 +159,14 @@ export class KitchenScene extends Container {
     })
   }
 
-  private spawnPlayer(myId: string) {
+  private spawnPlayer(myId: string, characterId?: string) {
     // Spawn my character
     this.characterManager.spawnCharacter({
       id: myId,
       name: 'Me',
       startPosition: { x: 400 + Math.random() * 100, y: 600 },
       speed: 250,
-      textureId: 'char-boy-1',
+      textureId: characterId || 'char-boy-1',
       isAI: false,
     })
   }
