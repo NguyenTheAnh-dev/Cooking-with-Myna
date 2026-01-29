@@ -37,7 +37,7 @@ export function RoomScreen({ roomId }: RoomScreenProps) {
                         </Card>
 
                         <div className="flex-1"></div>
-                        <Link href={`/game?roomId=${roomId}`} className="w-full">
+                        <Link href={`/game/${roomId}`} className="w-full">
                             <Button size="lg" className="w-full h-14 text-xl shadow-lg animate-pulse mt-auto">
                                 Start Cooking!
                             </Button>

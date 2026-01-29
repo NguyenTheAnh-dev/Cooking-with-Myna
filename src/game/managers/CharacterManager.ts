@@ -25,7 +25,7 @@ export class CharacterManager {
     if (config.isAI) {
       char = new AINPC(config.id, config.textureId, this.scene)
     } else {
-      char = new Character(config.id, config.textureId, config.speed)
+      char = new Character(config.id, config.speed)
     }
 
     char.x = config.startPosition.x
@@ -47,7 +47,7 @@ export class CharacterManager {
   public spawnRemoteCharacter(id: string, x: number, y: number, textureId: string = 'char-girl-1') {
     if (this.characters.has(id)) return
 
-    const char = new Character(id, textureId, 250)
+    const char = new Character(id)
     char.x = x
     char.y = y
 

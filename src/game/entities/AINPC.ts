@@ -8,7 +8,9 @@ export class AINPC extends Character {
   public brain: NPCBrain | null = null
 
   constructor(id: string, textureId: string, scene: KitchenScene, skill: AISkillLevel = 'normal') {
-    super(id, textureId)
+    super(id)
+    // We might want to use textureId later, but for now parent ignores it or we set it manually
+    // this.setTexture(textureId) // if we had such method
 
     // Adjust stats based on skill
     switch (skill) {

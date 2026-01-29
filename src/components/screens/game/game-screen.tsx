@@ -4,12 +4,13 @@ import GameCanvas from '@/components/game/GameCanvas'
 
 interface GameScreenProps {
     roomId?: string | null
+    playerId: string
 }
 
-export function GameScreen({ roomId }: GameScreenProps) {
+export function GameScreen({ roomId, playerId }: GameScreenProps) {
     return (
         <main className="w-full h-screen">
-            <GameCanvas roomId={roomId} />
+            <GameCanvas roomId={roomId} playerId={playerId} />
         </main>
     )
 }

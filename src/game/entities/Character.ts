@@ -1,4 +1,4 @@
-import { Container, Sprite, Assets } from 'pixi.js'
+import { Container, Sprite, Texture } from 'pixi.js'
 import { CharacterState, Direction } from '../models/GameState'
 import { Item } from './Item'
 
@@ -22,15 +22,17 @@ export class Character extends Container {
 
   private readonly CHARACTER_SCALE = 0.5
 
-  constructor(id: string, textureId: string, speed: number = 200) {
+  constructor(id: string, speed: number = 200) {
     // Speed in px/sec
     super()
     this.id = id
     this.speed = speed
 
-    const texture = Assets.get(textureId)
+    // Load texture
+    const texture = Texture.from('/assets/characters/char-girl-1.png')
     this.sprite = new Sprite(texture)
-    this.sprite.anchor.set(0.5, 1)
+    this.sprite.anchor.set(0.5)
+    this.sprite.scale.set(0.5) // Adjust scale as needed for the new assets, 1)
     this.sprite.scale.set(this.CHARACTER_SCALE)
 
     this.addChild(this.sprite)

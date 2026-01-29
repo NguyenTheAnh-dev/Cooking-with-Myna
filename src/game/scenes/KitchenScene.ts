@@ -1,4 +1,4 @@
-import { Container, Graphics, Ticker, Sprite, Assets } from 'pixi.js'
+import { Container, Sprite, Application, Texture, Ticker } from 'pixi.js'
 import { CharacterManager } from '../managers/CharacterManager'
 import { DishManager } from '../managers/DishManager'
 import { GameLoop } from '../core/GameLoop'
@@ -86,7 +86,8 @@ export class KitchenScene extends Container {
     setupBasicTutorial(this.tutorialManager)
     this.tutorialManager.start()
 
-    Ticker.shared.add((ticker) => {
+    // Use Ticker to drive the validation
+    Ticker.shared.add((ticker: Ticker) => {
       this.tutorialManager.update()
       InputManager.getInstance().update()
 
@@ -121,25 +122,16 @@ export class KitchenScene extends Container {
   private drawBackground(): Container {
     const bgContainer = new Container()
 
-    const floor = new Graphics()
-    floor.rect(0, 0, 1200, 800)
-    floor.fill(0xececec)
-    bgContainer.addChild(floor)
+    // 1. Draw Floor (Image)
+    const texture = Texture.from('/assets/backgrounds/bg_level_1.png')
+    const bgSprite = new Sprite(texture)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const bgKey = (this.currentLevel as any).background || 'bg_level_1'
+    // Scale to fit or cover the screen area (800x600 for now)
+    // Scale to fit or cover the screen area (800x600 for now)
+    bgSprite.width = 1200
+    bgSprite.height = 800
 
-    try {
-      const texture = Assets.get(bgKey)
-      if (texture) {
-        const bgSprite = new Sprite(texture)
-        bgSprite.width = 1200
-        bgSprite.height = 800
-        bgContainer.addChild(bgSprite)
-      }
-    } catch {
-      console.warn('Background image not found:', bgKey)
-    }
+    bgContainer.addChild(bgSprite)
 
     return bgContainer
   }
