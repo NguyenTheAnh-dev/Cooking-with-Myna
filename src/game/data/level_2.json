@@ -39,5 +39,6 @@
             "x": 600,
             "y": 100
         }
-    ]
+    ],
+    "background": "bg_level_2"
 }

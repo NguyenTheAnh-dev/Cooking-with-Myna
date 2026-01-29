@@ -60,5 +60,6 @@
             "x": 100,
             "y": 600
         }
-    ]
+    ],
+    "background": "bg_level_3"
 }
