@@ -1,9 +1,6 @@
-import GameCanvas from '@/components/game/GameCanvas'
+import { GameScreen } from '@/components/screens/game/game-screen'
 
 export default function GamePage() {
-    return (
-        <main className="w-full h-screen">
-            <GameCanvas />
-        </main>
-    )
+    return <GameScreen />
 }
+

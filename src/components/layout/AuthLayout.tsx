@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import { Logo } from "@/components/common/Logo";
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -16,6 +17,9 @@ export function AuthLayout({
         <div className="flex h-screen w-full overflow-hidden bg-primary/10">
             <div className="flex flex-1 flex-col items-center justify-center p-8 lg:p-12">
                 <div className="w-full max-w-sm space-y-6">
+                    <div className="flex justify-center mb-8">
+                        <Logo iconSize={120} />
+                    </div>
                     {(title || description) && (
                         <div className="flex flex-col space-y-2 text-center">
                             {title && <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>}
