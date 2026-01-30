@@ -20,7 +20,7 @@ export default function GameCanvas({
   playerId = 'guest-' + Math.floor(Math.random() * 1000),
   characterId,
   levelId = 1,
-  players = []
+  players = [],
 }: GameCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -33,21 +33,25 @@ export default function GameCanvas({
 
       const { GameApp } = await import('@/game/core/GameApp')
       gameApp = GameApp.getInstance()
-      await (gameApp as { initialize: (el: HTMLElement, roomId: string | null, playerId: string, characterId?: string, levelId?: number, players?: PlayerData[]) => Promise<void> }).initialize(
-        containerRef.current,
-        roomId,
-        playerId,
-        characterId,
-        levelId,
-        players
-      )
+      await (
+        gameApp as {
+          initialize: (
+            el: HTMLElement,
+            roomId: string | null,
+            playerId: string,
+            characterId?: string,
+            levelId?: number,
+            players?: PlayerData[]
+          ) => Promise<void>
+        }
+      ).initialize(containerRef.current, roomId, playerId, characterId, levelId, players)
     }
 
     initGame()
 
     return () => {
       if (gameApp) {
-        ; (gameApp as { destroy: () => void }).destroy()
+        ;(gameApp as { destroy: () => void }).destroy()
       }
     }
   }, [roomId, playerId, characterId, levelId, players])

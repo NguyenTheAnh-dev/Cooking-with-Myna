@@ -4,15 +4,14 @@ import { ROUTES } from '@/constants/routes'
 import { DashboardScreen } from '@/components/screens/dashboard/dashboard-screen'
 
 export default async function DashboardPage() {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-    if (!user) {
-        redirect(ROUTES.AUTH.LOGIN)
-    }
+  if (!user) {
+    redirect(ROUTES.AUTH.LOGIN)
+  }
 
-
-
-    return <DashboardScreen />
+  return <DashboardScreen />
 }
-

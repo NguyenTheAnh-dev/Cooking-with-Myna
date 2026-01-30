@@ -14,7 +14,7 @@ This section contains **5 rules** focused on bundle size optimization.
 ## Rule 2.1: Avoid Barrel File Imports
 
 **Impact:** CRITICAL  
-**Tags:** bundle, imports, tree-shaking, barrel-files, performance  
+**Tags:** bundle, imports, tree-shaking, barrel-files, performance
 
 ## Avoid Barrel File Imports
 
@@ -54,8 +54,8 @@ import TextField from '@mui/material/TextField'
 // next.config.js - use optimizePackageImports
 module.exports = {
   experimental: {
-    optimizePackageImports: ['lucide-react', '@mui/material']
-  }
+    optimizePackageImports: ['lucide-react', '@mui/material'],
+  },
 }
 
 // Then you can keep the ergonomic barrel imports:
@@ -74,7 +74,7 @@ Reference: [How we optimized package imports in Next.js](https://vercel.com/blog
 ## Rule 2.2: Conditional Module Loading
 
 **Impact:** HIGH  
-**Tags:** bundle, conditional-loading, lazy-loading  
+**Tags:** bundle, conditional-loading, lazy-loading
 
 ## Conditional Module Loading
 
@@ -83,13 +83,19 @@ Load large data or modules only when a feature is activated.
 **Example (lazy-load animation frames):**
 
 ```tsx
-function AnimationPlayer({ enabled, setEnabled }: { enabled: boolean; setEnabled: React.Dispatch<React.SetStateAction<boolean>> }) {
+function AnimationPlayer({
+  enabled,
+  setEnabled,
+}: {
+  enabled: boolean
+  setEnabled: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const [frames, setFrames] = useState<Frame[] | null>(null)
 
   useEffect(() => {
     if (enabled && !frames && typeof window !== 'undefined') {
       import('./animation-frames.js')
-        .then(mod => setFrames(mod.frames))
+        .then((mod) => setFrames(mod.frames))
         .catch(() => setEnabled(false))
     }
   }, [enabled, frames, setEnabled])
@@ -106,7 +112,7 @@ The `typeof window !== 'undefined'` check prevents bundling this module for SSR,
 ## Rule 2.3: Defer Non-Critical Third-Party Libraries
 
 **Impact:** MEDIUM  
-**Tags:** bundle, third-party, analytics, defer  
+**Tags:** bundle, third-party, analytics, defer
 
 ## Defer Non-Critical Third-Party Libraries
 
@@ -134,10 +140,9 @@ export default function RootLayout({ children }) {
 ```tsx
 import dynamic from 'next/dynamic'
 
-const Analytics = dynamic(
-  () => import('@vercel/analytics/react').then(m => m.Analytics),
-  { ssr: false }
-)
+const Analytics = dynamic(() => import('@vercel/analytics/react').then((m) => m.Analytics), {
+  ssr: false,
+})
 
 export default function RootLayout({ children }) {
   return (
@@ -156,7 +161,7 @@ export default function RootLayout({ children }) {
 ## Rule 2.4: Dynamic Imports for Heavy Components
 
 **Impact:** CRITICAL  
-**Tags:** bundle, dynamic-import, code-splitting, next-dynamic  
+**Tags:** bundle, dynamic-import, code-splitting, next-dynamic
 
 ## Dynamic Imports for Heavy Components
 
@@ -177,10 +182,9 @@ function CodePanel({ code }: { code: string }) {
 ```tsx
 import dynamic from 'next/dynamic'
 
-const MonacoEditor = dynamic(
-  () => import('./monaco-editor').then(m => m.MonacoEditor),
-  { ssr: false }
-)
+const MonacoEditor = dynamic(() => import('./monaco-editor').then((m) => m.MonacoEditor), {
+  ssr: false,
+})
 
 function CodePanel({ code }: { code: string }) {
   return <MonacoEditor value={code} />
@@ -192,7 +196,7 @@ function CodePanel({ code }: { code: string }) {
 ## Rule 2.5: Preload Based on User Intent
 
 **Impact:** MEDIUM  
-**Tags:** bundle, preload, user-intent, hover  
+**Tags:** bundle, preload, user-intent, hover
 
 ## Preload Based on User Intent
 
@@ -209,11 +213,7 @@ function EditorButton({ onClick }: { onClick: () => void }) {
   }
 
   return (
-    <button
-      onMouseEnter={preload}
-      onFocus={preload}
-      onClick={onClick}
-    >
+    <button onMouseEnter={preload} onFocus={preload} onClick={onClick}>
       Open Editor
     </button>
   )
@@ -226,15 +226,12 @@ function EditorButton({ onClick }: { onClick: () => void }) {
 function FlagsProvider({ children, flags }: Props) {
   useEffect(() => {
     if (flags.editorEnabled && typeof window !== 'undefined') {
-      void import('./monaco-editor').then(mod => mod.init())
+      void import('./monaco-editor').then((mod) => mod.init())
     }
   }, [flags.editorEnabled])
 
-  return <FlagsContext.Provider value={flags}>
-    {children}
-  </FlagsContext.Provider>
+  return <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>
 }
 ```
 
 The `typeof window !== 'undefined'` check prevents bundling preloaded modules for SSR, optimizing server bundle size and build speed.
-

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
 
@@ -38,7 +38,7 @@
      LIGHT MODE - Neutral & Readable
      Primary: #ec4899 (Pink)
      ============================================== */
-  
+
   /* Page Backgrounds - Soft neutral, not pure white */
   --background: #fafafa;
   --foreground: #1f2937;
@@ -107,7 +107,7 @@
      DARK MODE - Neutral & Easy on Eyes
      Primary: #f472b6 (Lighter pink for dark bg)
      ============================================== */
-  
+
   /* Page Backgrounds - Soft dark, not pure black */
   --background: #111827;
   --foreground: #f3f4f6;

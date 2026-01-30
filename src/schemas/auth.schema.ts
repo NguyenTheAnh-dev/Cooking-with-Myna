@@ -10,7 +10,9 @@ export const RegisterSchema = z
   .object({
     email: commonValidations.email,
     password: commonValidations.password,
-    confirmPassword: z.string({ message: VALIDATION_MESSAGES.CONFIRM_PASSWORD_REQUIRED }).min(1, { message: VALIDATION_MESSAGES.CONFIRM_PASSWORD_REQUIRED }),
+    confirmPassword: z
+      .string({ message: VALIDATION_MESSAGES.CONFIRM_PASSWORD_REQUIRED })
+      .min(1, { message: VALIDATION_MESSAGES.CONFIRM_PASSWORD_REQUIRED }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: VALIDATION_MESSAGES.PASSWORD_MISMATCH,

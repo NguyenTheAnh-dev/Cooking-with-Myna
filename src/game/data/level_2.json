@@ -1,44 +1,44 @@
 {
-    "id": "level_2",
-    "name": "Busy Kitchen",
-    "width": 1200,
-    "height": 800,
-    "entities": [
-        {
-            "id": "stove-main",
-            "type": "station",
-            "subtype": "stove",
-            "x": 600,
-            "y": 400
-        },
-        {
-            "id": "cut-1",
-            "type": "station",
-            "subtype": "cut",
-            "x": 300,
-            "y": 400
-        },
-        {
-            "id": "cut-2",
-            "type": "station",
-            "subtype": "cut",
-            "x": 900,
-            "y": 400
-        },
-        {
-            "id": "sink-1",
-            "type": "station",
-            "subtype": "sink",
-            "x": 600,
-            "y": 700
-        },
-        {
-            "id": "serve-1",
-            "type": "station",
-            "subtype": "serve",
-            "x": 600,
-            "y": 100
-        }
-    ],
-    "background": "bg_level_2"
+  "id": "level_2",
+  "name": "Busy Kitchen",
+  "width": 1200,
+  "height": 800,
+  "entities": [
+    {
+      "id": "stove-main",
+      "type": "station",
+      "subtype": "stove",
+      "x": 600,
+      "y": 400
+    },
+    {
+      "id": "cut-1",
+      "type": "station",
+      "subtype": "cut",
+      "x": 300,
+      "y": 400
+    },
+    {
+      "id": "cut-2",
+      "type": "station",
+      "subtype": "cut",
+      "x": 900,
+      "y": 400
+    },
+    {
+      "id": "sink-1",
+      "type": "station",
+      "subtype": "sink",
+      "x": 600,
+      "y": 700
+    },
+    {
+      "id": "serve-1",
+      "type": "station",
+      "subtype": "serve",
+      "x": 600,
+      "y": 100
+    }
+  ],
+  "background": "bg_level_2"
 }

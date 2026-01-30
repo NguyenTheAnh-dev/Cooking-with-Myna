@@ -1,18 +1,18 @@
-import { create } from "zustand";
+import { create } from 'zustand'
 
 // Placeholder Player interface - extend as needed
 export interface Player {
-  id: string;
-  name: string;
-  isReady: boolean;
+  id: string
+  name: string
+  isReady: boolean
 }
 
 interface RoomState {
-  roomId?: string;
-  players: Player[];
-  setRoomId: (id: string) => void;
-  setPlayers: (players: Player[]) => void;
-  resetRoom: () => void;
+  roomId?: string
+  players: Player[]
+  setRoomId: (id: string) => void
+  setPlayers: (players: Player[]) => void
+  resetRoom: () => void
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
@@ -21,4 +21,4 @@ export const useRoomStore = create<RoomState>((set) => ({
   setRoomId: (id) => set({ roomId: id }),
   setPlayers: (players) => set({ players }),
   resetRoom: () => set({ roomId: undefined, players: [] }),
-}));
+}))

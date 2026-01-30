@@ -24,7 +24,7 @@ export async function loginAction(data: LoginInput) {
 
 export async function registerAction(data: RegisterInput) {
   console.log('registerAction called with:', { email: data.email, hasPassword: !!data.password })
-  
+
   const supabase = await createClient()
 
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -66,7 +66,9 @@ export async function resetPasswordAction(data: ResetPasswordInput) {
 
 export async function getCurrentUser() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   return user
 }
 

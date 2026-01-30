@@ -1,39 +1,35 @@
-import { useCallback } from "react";
-import { useGamePhaseStore, GamePhase } from "@/store/gamePhase.store";
-import { useLoadingStore } from "@/store/loading.store";
+import { useCallback } from 'react'
+import { useGamePhaseStore, GamePhase } from '@/store/gamePhase.store'
+import { useLoadingStore } from '@/store/loading.store'
 
 /**
  * Hook to handle transitions between game screens.
  * Can optionally show a loading spinner during the transition delay.
  */
 export const useScreenTransition = () => {
-  const setPhase = useGamePhaseStore((state) => state.setPhase);
-  const { showLoading, hideLoading } = useLoadingStore();
+  const setPhase = useGamePhaseStore((state) => state.setPhase)
+  const { showLoading, hideLoading } = useLoadingStore()
 
   const transitionTo = useCallback(
-    (
-      targetPhase: GamePhase,
-      delayMs: number = 0,
-      withLoading: boolean = false,
-    ) => {
+    (targetPhase: GamePhase, delayMs: number = 0, withLoading: boolean = false) => {
       if (delayMs > 0) {
         if (withLoading) {
-          showLoading();
+          showLoading()
         }
         setTimeout(() => {
-          setPhase(targetPhase);
+          setPhase(targetPhase)
           if (withLoading) {
-            hideLoading();
+            hideLoading()
           }
-        }, delayMs);
+        }, delayMs)
       } else {
-        setPhase(targetPhase);
+        setPhase(targetPhase)
       }
     },
-    [setPhase, showLoading, hideLoading],
-  );
+    [setPhase, showLoading, hideLoading]
+  )
 
   return {
     transitionTo,
-  };
-};
+  }
+}

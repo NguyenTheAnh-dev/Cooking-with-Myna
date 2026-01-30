@@ -1,51 +1,51 @@
 {
-    "id": "level_5",
-    "name": "The Circle",
-    "width": 1200,
-    "height": 800,
-    "entities": [
-        {
-            "id": "c-1",
-            "type": "station",
-            "subtype": "stove",
-            "x": 600,
-            "y": 100
-        },
-        {
-            "id": "c-2",
-            "type": "station",
-            "subtype": "cut",
-            "x": 900,
-            "y": 250
-        },
-        {
-            "id": "c-3",
-            "type": "station",
-            "subtype": "sink",
-            "x": 900,
-            "y": 550
-        },
-        {
-            "id": "c-4",
-            "type": "station",
-            "subtype": "plate",
-            "x": 600,
-            "y": 700
-        },
-        {
-            "id": "c-5",
-            "type": "station",
-            "subtype": "serve",
-            "x": 300,
-            "y": 550
-        },
-        {
-            "id": "c-6",
-            "type": "station",
-            "subtype": "cut",
-            "x": 300,
-            "y": 250
-        }
-    ],
-    "background": "bg_level_5"
+  "id": "level_5",
+  "name": "The Circle",
+  "width": 1200,
+  "height": 800,
+  "entities": [
+    {
+      "id": "c-1",
+      "type": "station",
+      "subtype": "stove",
+      "x": 600,
+      "y": 100
+    },
+    {
+      "id": "c-2",
+      "type": "station",
+      "subtype": "cut",
+      "x": 900,
+      "y": 250
+    },
+    {
+      "id": "c-3",
+      "type": "station",
+      "subtype": "sink",
+      "x": 900,
+      "y": 550
+    },
+    {
+      "id": "c-4",
+      "type": "station",
+      "subtype": "plate",
+      "x": 600,
+      "y": 700
+    },
+    {
+      "id": "c-5",
+      "type": "station",
+      "subtype": "serve",
+      "x": 300,
+      "y": 550
+    },
+    {
+      "id": "c-6",
+      "type": "station",
+      "subtype": "cut",
+      "x": 300,
+      "y": 250
+    }
+  ],
+  "background": "bg_level_5"
 }

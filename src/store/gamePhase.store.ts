@@ -1,13 +1,13 @@
-import { create } from "zustand";
+import { create } from 'zustand'
 
-export type GamePhase = "idle" | "lobby" | "playing" | "result";
+export type GamePhase = 'idle' | 'lobby' | 'playing' | 'result'
 
 interface GamePhaseState {
-  phase: GamePhase;
-  setPhase: (phase: GamePhase) => void;
+  phase: GamePhase
+  setPhase: (phase: GamePhase) => void
 }
 
 export const useGamePhaseStore = create<GamePhaseState>((set) => ({
-  phase: "idle",
+  phase: 'idle',
   setPhase: (phase) => set({ phase }),
-}));
+}))

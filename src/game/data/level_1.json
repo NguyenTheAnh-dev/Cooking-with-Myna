@@ -1,51 +1,51 @@
 {
-    "id": "level_1",
-    "name": "Starter Kitchen",
-    "width": 1200,
-    "height": 800,
-    "entities": [
-        {
-            "id": "stove-1",
-            "type": "station",
-            "subtype": "stove",
-            "x": 200,
-            "y": 200
-        },
-        {
-            "id": "stove-2",
-            "type": "station",
-            "subtype": "stove",
-            "x": 500,
-            "y": 200
-        },
-        {
-            "id": "cut-1",
-            "type": "station",
-            "subtype": "cut",
-            "x": 800,
-            "y": 200
-        },
-        {
-            "id": "sink-1",
-            "type": "station",
-            "subtype": "sink",
-            "x": 200,
-            "y": 500
-        },
-        {
-            "id": "plate-1",
-            "type": "station",
-            "subtype": "plate",
-            "x": 500,
-            "y": 500
-        },
-        {
-            "id": "serve-1",
-            "type": "station",
-            "subtype": "serve",
-            "x": 800,
-            "y": 500
-        }
-    ],
-    "background": "bg_level_1"
+  "id": "level_1",
+  "name": "Starter Kitchen",
+  "width": 1200,
+  "height": 800,
+  "entities": [
+    {
+      "id": "stove-1",
+      "type": "station",
+      "subtype": "stove",
+      "x": 200,
+      "y": 200
+    },
+    {
+      "id": "stove-2",
+      "type": "station",
+      "subtype": "stove",
+      "x": 500,
+      "y": 200
+    },
+    {
+      "id": "cut-1",
+      "type": "station",
+      "subtype": "cut",
+      "x": 800,
+      "y": 200
+    },
+    {
+      "id": "sink-1",
+      "type": "station",
+      "subtype": "sink",
+      "x": 200,
+      "y": 500
+    },
+    {
+      "id": "plate-1",
+      "type": "station",
+      "subtype": "plate",
+      "x": 500,
+      "y": 500
+    },
+    {
+      "id": "serve-1",
+      "type": "station",
+      "subtype": "serve",
+      "x": 800,
+      "y": 500
+    }
+  ],
+  "background": "bg_level_1"
 }

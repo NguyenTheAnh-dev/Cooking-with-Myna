@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi">
-      <body className={cn(font.className, "antialiased min-h-screen bg-background")}>
+      <body className={cn(font.className, 'antialiased min-h-screen bg-background')}>
         <LandscapeEnforcer />
         {children}
       </body>

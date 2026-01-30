@@ -1,6 +1,5 @@
-import { ResultScreen } from "@/components/screens/result/result-screen";
+import { ResultScreen } from '@/components/screens/result/result-screen'
 
 export default function ResultPage() {
-    return <ResultScreen />;
+  return <ResultScreen />
 }
-

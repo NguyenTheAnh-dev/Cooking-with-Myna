@@ -1,4 +1,5 @@
 import { Character } from './Character'
+import { Item } from './Item'
 import { NPCBrain } from '../ai'
 import { KitchenScene } from '../scenes/KitchenScene'
 
@@ -6,6 +7,7 @@ export type AISkillLevel = 'slow' | 'normal' | 'pro'
 
 export class AINPC extends Character {
   public brain: NPCBrain | null = null
+  public collectedItems: Item[] = [] // Track multiple ingredients for multi-ingredient recipes
 
   constructor(id: string, textureId: string, scene: KitchenScene, skill: AISkillLevel = 'normal') {
     super(id)
@@ -31,5 +33,15 @@ export class AINPC extends Character {
 
   public update(dt: number) {
     this.brain?.update(dt)
+  }
+
+  /** Add an item to collected items (for multi-ingredient recipes) */
+  public addToCollected(item: Item) {
+    this.collectedItems.push(item)
+  }
+
+  /** Clear all collected items (after plating) */
+  public clearCollected() {
+    this.collectedItems = []
   }
 }

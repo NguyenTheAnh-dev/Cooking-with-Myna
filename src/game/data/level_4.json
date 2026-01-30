@@ -1,65 +1,65 @@
 {
-    "id": "level_4",
-    "name": "Four Corners",
-    "width": 1200,
-    "height": 800,
-    "entities": [
-        {
-            "id": "group-tl",
-            "type": "station",
-            "subtype": "stove",
-            "x": 100,
-            "y": 100
-        },
-        {
-            "id": "group-tl-2",
-            "type": "station",
-            "subtype": "cut",
-            "x": 250,
-            "y": 100
-        },
-        {
-            "id": "group-tr",
-            "type": "station",
-            "subtype": "sink",
-            "x": 1100,
-            "y": 100
-        },
-        {
-            "id": "group-tr-2",
-            "type": "station",
-            "subtype": "plate",
-            "x": 950,
-            "y": 100
-        },
-        {
-            "id": "group-bl",
-            "type": "station",
-            "subtype": "stove",
-            "x": 100,
-            "y": 700
-        },
-        {
-            "id": "group-bl-2",
-            "type": "station",
-            "subtype": "serve",
-            "x": 250,
-            "y": 700
-        },
-        {
-            "id": "group-br",
-            "type": "station",
-            "subtype": "cut",
-            "x": 1100,
-            "y": 700
-        },
-        {
-            "id": "group-br-2",
-            "type": "station",
-            "subtype": "stove",
-            "x": 950,
-            "y": 700
-        }
-    ],
-    "background": "bg_level_4"
+  "id": "level_4",
+  "name": "Four Corners",
+  "width": 1200,
+  "height": 800,
+  "entities": [
+    {
+      "id": "group-tl",
+      "type": "station",
+      "subtype": "stove",
+      "x": 100,
+      "y": 100
+    },
+    {
+      "id": "group-tl-2",
+      "type": "station",
+      "subtype": "cut",
+      "x": 250,
+      "y": 100
+    },
+    {
+      "id": "group-tr",
+      "type": "station",
+      "subtype": "sink",
+      "x": 1100,
+      "y": 100
+    },
+    {
+      "id": "group-tr-2",
+      "type": "station",
+      "subtype": "plate",
+      "x": 950,
+      "y": 100
+    },
+    {
+      "id": "group-bl",
+      "type": "station",
+      "subtype": "stove",
+      "x": 100,
+      "y": 700
+    },
+    {
+      "id": "group-bl-2",
+      "type": "station",
+      "subtype": "serve",
+      "x": 250,
+      "y": 700
+    },
+    {
+      "id": "group-br",
+      "type": "station",
+      "subtype": "cut",
+      "x": 1100,
+      "y": 700
+    },
+    {
+      "id": "group-br-2",
+      "type": "station",
+      "subtype": "stove",
+      "x": 950,
+      "y": 700
+    }
+  ],
+  "background": "bg_level_4"
 }

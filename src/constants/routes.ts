@@ -32,7 +32,4 @@ export const PROTECTED_ROUTES = [
 ]
 
 /** Auth routes - redirect to dashboard if authenticated */
-export const AUTH_ROUTES = [
-  ROUTES.AUTH.LOGIN,
-  ROUTES.AUTH.REGISTER,
-]
+export const AUTH_ROUTES = [ROUTES.AUTH.LOGIN, ROUTES.AUTH.REGISTER]
