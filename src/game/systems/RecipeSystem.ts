@@ -14,21 +14,25 @@ export interface RecipeStep {
 export interface Recipe {
   id: string
   name: string
+  ingredients: ItemType[] // List of required ingredients
   steps: RecipeStep[]
   finalItem: ItemType
+  difficulty: 'easy' | 'medium' | 'hard'
+  points: number // Score for completing this recipe
 }
 
 export class RecipeSystem {
   private static recipes: Map<string, Recipe> = new Map()
 
   static {
-    // 1. Tomato Soup (Simplest)
-    // Tomato -> Chop -> Pot -> Bowl
-    // For this demo: Tomato -> Stove -> Served
+    // 1. Tomato Soup (Easy) - Single ingredient, single step
     this.recipes.set('tomato_soup', {
       id: 'tomato_soup',
       name: 'Tomato Soup',
-      finalItem: 'tomato', // In a real game this would change type, keeping simple
+      ingredients: ['tomato'],
+      finalItem: 'tomato',
+      difficulty: 'easy',
+      points: 50,
       steps: [
         {
           requiredItem: 'tomato',
@@ -45,25 +49,109 @@ export class RecipeSystem {
           station: 'plate',
           action: 'plate',
           nextState: 'plated',
-          duration: 0.5, // Instant plating
+          duration: 0.5,
         },
       ],
     })
 
-    // 2. Steak
+    // 2. Steak (Easy) - Single ingredient, cook only
     this.recipes.set('steak', {
       id: 'steak',
       name: 'Steak',
+      ingredients: ['meat'],
       finalItem: 'steak',
+      difficulty: 'easy',
+      points: 75,
       steps: [
         {
-          requiredItem: 'steak',
+          requiredItem: 'meat',
           requiredState: 'raw',
           station: 'stove',
           action: 'cook',
           nextState: 'cooked',
           duration: 5,
           burnDuration: 4,
+        },
+        {
+          requiredItem: 'meat',
+          requiredState: 'cooked',
+          station: 'plate',
+          action: 'plate',
+          nextState: 'plated',
+          duration: 0.5,
+        },
+      ],
+    })
+
+    // 3. Salad (Medium) - Multiple ingredients, chop required
+    this.recipes.set('salad', {
+      id: 'salad',
+      name: 'Fresh Salad',
+      ingredients: ['lettuce', 'tomato'],
+      finalItem: 'salad',
+      difficulty: 'medium',
+      points: 100,
+      steps: [
+        {
+          requiredItem: 'lettuce',
+          requiredState: 'raw',
+          station: 'cut',
+          action: 'chop',
+          nextState: 'chopped',
+          duration: 2,
+        },
+        {
+          requiredItem: 'tomato',
+          requiredState: 'raw',
+          station: 'cut',
+          action: 'chop',
+          nextState: 'chopped',
+          duration: 2,
+        },
+        {
+          requiredItem: 'lettuce',
+          requiredState: 'chopped',
+          station: 'plate',
+          action: 'plate',
+          nextState: 'plated',
+          duration: 0.5,
+        },
+      ],
+    })
+
+    // 4. Burger (Hard) - Multiple ingredients, chop + cook + assemble
+    this.recipes.set('burger', {
+      id: 'burger',
+      name: 'Classic Burger',
+      ingredients: ['bread', 'meat', 'lettuce'],
+      finalItem: 'burger',
+      difficulty: 'hard',
+      points: 150,
+      steps: [
+        {
+          requiredItem: 'meat',
+          requiredState: 'raw',
+          station: 'stove',
+          action: 'cook',
+          nextState: 'cooked',
+          duration: 4,
+          burnDuration: 5,
+        },
+        {
+          requiredItem: 'lettuce',
+          requiredState: 'raw',
+          station: 'cut',
+          action: 'chop',
+          nextState: 'chopped',
+          duration: 1.5,
+        },
+        {
+          requiredItem: 'bread',
+          requiredState: 'raw',
+          station: 'plate',
+          action: 'plate',
+          nextState: 'plated',
+          duration: 0.5,
         },
       ],
     })
@@ -75,6 +163,10 @@ export class RecipeSystem {
 
   static getAllRecipes(): Map<string, Recipe> {
     return this.recipes
+  }
+
+  static getRecipesByDifficulty(difficulty: 'easy' | 'medium' | 'hard'): Recipe[] {
+    return Array.from(this.recipes.values()).filter((r) => r.difficulty === difficulty)
   }
 
   /**
@@ -94,5 +186,29 @@ export class RecipeSystem {
     )
 
     return step || null
+  }
+
+  /**
+   * Get the list of required ingredients for a recipe
+   */
+  static getIngredients(recipeId: string): ItemType[] {
+    const recipe = this.recipes.get(recipeId)
+    return recipe?.ingredients || []
+  }
+
+  /**
+   * Get recipe IDs suitable for a given difficulty level
+   */
+  static getRecipeIdsForLevel(level: number): string[] {
+    if (level <= 3) {
+      // Easy levels: Only easy recipes
+      return ['tomato_soup', 'steak']
+    } else if (level <= 6) {
+      // Medium levels: Easy + Medium recipes
+      return ['tomato_soup', 'steak', 'salad']
+    } else {
+      // Hard levels: All recipes
+      return ['tomato_soup', 'steak', 'salad', 'burger']
+    }
   }
 }
