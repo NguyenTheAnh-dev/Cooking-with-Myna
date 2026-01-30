@@ -14,7 +14,7 @@ export function Logo({ className = '', iconSize = 32 }: LogoProps) {
     >
       <div className="relative">
         <Image
-          src="/assets/logo.png"
+          src="/assets/logo-myna-1.png"
           alt="Cook with Myna Logo"
           width={iconSize}
           height={iconSize}

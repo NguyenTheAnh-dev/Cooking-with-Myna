@@ -32,7 +32,7 @@ export function AuthLayout({ children, title, description }: AuthLayoutProps) {
       <div className="hidden flex-1 lg:flex flex-col items-center justify-center relative overflow-hidden">
         <div className="relative w-full max-w-2xl aspect-square flex items-center justify-center">
           <Image
-            src="/assets/auth-hero-myna.png"
+            src="/assets/auth-hero-myna-3.png"
             alt="Cook with Myna Characters"
             width={800}
             height={800}

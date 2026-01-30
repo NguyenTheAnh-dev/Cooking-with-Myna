@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { Smartphone } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export function LandscapeEnforcer() {
   const [isLandscape, setIsLandscape] = useState(true) // Default to true (assume valid) to avoid flash
+  const pathname = usePathname()
 
   useEffect(() => {
     const checkOrientation = () => {
@@ -24,7 +26,10 @@ export function LandscapeEnforcer() {
     }
   }, [])
 
-  if (isLandscape) return null
+  // Only enforce landscape on specific routes (Zoom/Game contexts)
+  const shouldEnforce = pathname?.startsWith('/room') || pathname?.startsWith('/game')
+
+  if (isLandscape || !shouldEnforce) return null
 
   const handleAttemptRotate = async () => {
     try {
