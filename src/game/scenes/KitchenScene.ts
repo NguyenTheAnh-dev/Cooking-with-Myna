@@ -42,9 +42,19 @@ export class KitchenScene extends Container {
   private updateTimer: number = 0
   private timeRemaining: number = 180000 // 3 mins default
   private isGameRunning: boolean = false
+  private remotePlayers: { id: string; characterId?: string }[] = []
 
-  constructor(roomId: string | null, playerId: string, levelId: number = 1, characterId?: string) {
+  constructor(
+    roomId: string | null,
+    playerId: string,
+    levelId: number = 1,
+    characterId?: string,
+    players: { id: string; characterId?: string }[] = []
+  ) {
     super()
+
+    // Store remote players (excluding self)
+    this.remotePlayers = players.filter((p) => p.id !== playerId)
 
     // Setup Level from LevelSystem
     this.levelId = levelId
@@ -175,6 +185,16 @@ export class KitchenScene extends Container {
     }
 
     this.spawnPlayer(playerId, characterId)
+
+    // Spawn other players with their selected characters
+    this.remotePlayers.forEach((player, index) => {
+      this.characterManager.spawnCharacter({
+        id: player.id,
+        name: `Player ${index + 2}`,
+        textureId: player.characterId || 'char-boy-1',
+        startPosition: { x: 400 + index * 80, y: 400 },
+      })
+    })
 
     setupBasicTutorial(this.tutorialManager)
     this.tutorialManager.start()

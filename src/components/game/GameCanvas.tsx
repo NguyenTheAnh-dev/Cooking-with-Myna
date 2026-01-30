@@ -2,18 +2,25 @@
 
 import React, { useEffect, useRef } from 'react'
 
+interface PlayerData {
+  id: string
+  characterId?: string
+}
+
 interface GameCanvasProps {
   roomId?: string | null
   playerId?: string
   characterId?: string
   levelId?: number
+  players?: PlayerData[]
 }
 
 export default function GameCanvas({
   roomId = null,
   playerId = 'guest-' + Math.floor(Math.random() * 1000),
   characterId,
-  levelId = 1
+  levelId = 1,
+  players = []
 }: GameCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -26,12 +33,13 @@ export default function GameCanvas({
 
       const { GameApp } = await import('@/game/core/GameApp')
       gameApp = GameApp.getInstance()
-      await (gameApp as { initialize: (el: HTMLElement, roomId: string | null, playerId: string, characterId?: string, levelId?: number) => Promise<void> }).initialize(
+      await (gameApp as { initialize: (el: HTMLElement, roomId: string | null, playerId: string, characterId?: string, levelId?: number, players?: PlayerData[]) => Promise<void> }).initialize(
         containerRef.current,
         roomId,
         playerId,
         characterId,
-        levelId
+        levelId,
+        players
       )
     }
 
@@ -42,8 +50,7 @@ export default function GameCanvas({
         ; (gameApp as { destroy: () => void }).destroy()
       }
     }
-  }, [roomId, playerId, characterId, levelId])
+  }, [roomId, playerId, characterId, levelId, players])
 
   return <div ref={containerRef} className="w-full h-screen bg-slate-900 overflow-hidden" />
 }
-

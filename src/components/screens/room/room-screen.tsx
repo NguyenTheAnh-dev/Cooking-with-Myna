@@ -180,16 +180,28 @@ export function RoomScreen({ roomId }: RoomScreenProps) {
 
     const handleStartGame = async () => {
         const channel = supabase.channel(`room:${roomId}`)
+
+        // Include all player characterIds in the broadcast
+        const playerData = players.map(p => ({
+            id: p.userId,
+            characterId: p.characterId
+        }))
+
         await channel.send({
             type: 'broadcast',
             event: 'start_game',
-            payload: { level: selectedLevelRef.current },
+            payload: {
+                level: selectedLevelRef.current,
+                players: playerData
+            },
         })
 
         const charId = myCharacterRef.current
         const params = new URLSearchParams()
         if (charId) params.set('character', charId)
         params.set('level', String(selectedLevelRef.current))
+        // Encode player data for multiplayer sync
+        params.set('players', JSON.stringify(playerData))
         router.push(`/game/${roomId}?${params.toString()}`)
     }
 
@@ -216,7 +228,27 @@ export function RoomScreen({ roomId }: RoomScreenProps) {
                                     </Badge>
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="space-y-4">
+                                {/* Large Preview */}
+                                <div className="flex justify-center">
+                                    <div className="relative w-32 h-32 rounded-xl bg-accent/30 border-2 border-dashed border-muted-foreground/30 flex items-center justify-center overflow-hidden">
+                                        {myCharacter ? (
+                                            <Image
+                                                src={`/assets/characters/${myCharacter}.png`}
+                                                alt={myCharacter}
+                                                fill
+                                                className="object-contain p-2"
+                                            />
+                                        ) : (
+                                            <div className="text-center text-muted-foreground text-sm">
+                                                <User className="h-8 w-8 mx-auto mb-1 opacity-50" />
+                                                <span>Chọn bên dưới</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Character Grid */}
                                 <div className="grid grid-cols-4 gap-2">
                                     {AVAILABLE_CHARACTERS.map((charId) => {
                                         const isTaken = players.some(p => p.characterId === charId && p.userId !== userId)
