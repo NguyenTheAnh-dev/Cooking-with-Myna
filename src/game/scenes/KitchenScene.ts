@@ -1,9 +1,11 @@
 import { Container, Sprite, Application, Texture, Ticker } from 'pixi.js'
+import { EventBus } from '../core/EventBus'
+import { useGameStore } from '../../stores/useGameStore'
 import { CharacterManager } from '../managers/CharacterManager'
 import { DishManager } from '../managers/DishManager'
 import { GameLoop } from '../core/GameLoop'
 import { Station } from '../entities/Station'
-import { OrderManager } from '../systems/OrderManager'
+import { OrderManager, Order } from '../systems/OrderManager'
 import { TutorialManager } from '../tutorial/TutorialManager'
 import { setupBasicTutorial } from '../tutorial/steps/TutorialSequence'
 import { KitchenLoader } from '../editor/KitchenLoader'
@@ -19,14 +21,21 @@ export class KitchenScene extends Container {
   public dishManager: DishManager
   public stations: Station[] = []
   public realtimeManager: RealtimeManager | null = null
+  // public gameHUD: GameHUD  <-- Removed
+  // public resultScreen: ResultScreen <-- Removed
 
   public tutorialManager: TutorialManager
   private currentLevel: KitchenLayout
+
+  // Sync Flag to prevent broadcast loops
+  private isProcessingNetworkEvent: boolean = false
 
   // Interactive background
   private background: Container
 
   private updateTimer: number = 0
+  private timeRemaining: number = 180000 // 3 mins default
+  private isGameRunning: boolean = false
 
   constructor(
     roomId: string | null,
@@ -50,6 +59,14 @@ export class KitchenScene extends Container {
     this.dishManager = new DishManager(this)
     this.tutorialManager = new TutorialManager(this)
 
+    // Start game logic (Host vs Client logic handled below)
+    this.isGameRunning = true
+    useGameStore.getState().resetGame()
+    useGameStore.getState().setTime(this.timeRemaining)
+
+    // Setup Game Over Trigger (Host)
+    // Game Over Logic will be checked in update()
+
     // Setup Controls (Tap-to-Move)
     const pointerController = new PointerController(
       this.background,
@@ -63,18 +80,71 @@ export class KitchenScene extends Container {
       this.realtimeManager = new RealtimeManager(roomId, playerId)
       this.realtimeManager.connect()
 
+      // Host Detection
+      this.realtimeManager.onPresenceSync = () => {
+        const players = this.realtimeManager!.getPlayers()
+        if (players.length > 0) {
+          // First player joined is Host
+          const isHost = players[0].id === playerId
+          if (isHost) {
+            console.log('I am the HOST')
+            this.orderManager.startGeneration()
+          } else {
+            console.log('I am a CLIENT')
+            this.orderManager.stopGeneration()
+          }
+        }
+      }
+
+      // Game Event Sync (Client Side)
+      this.realtimeManager.onGameEvent = (type, payload) => {
+        this.isProcessingNetworkEvent = true
+        try {
+          if (type === 'ORDER_NEW') {
+            this.orderManager.addOrder(payload)
+            useGameStore.getState().addOrder(payload) // Sync to UI
+          } else if (type === 'GAME_OVER') {
+            this.isGameRunning = false
+            useGameStore.getState().setGameOver(true)
+            useGameStore.getState().setScore(payload.score)
+            this.orderManager.stopGeneration()
+          } else if (type === 'ORDER_COMPLETED') {
+            this.orderManager.completeOrder(payload.recipeId)
+            // Score update is handled by OrderManager callback or separate event?
+            // We need to sync score.
+            // For now, let's assume Host broadcasts score update or we calc locally.
+          }
+        } finally {
+          this.isProcessingNetworkEvent = false
+        }
+      }
+
+      // Broadcast Logic (Host Side)
+      const bus = EventBus.getInstance()
+      bus.on('ORDER_NEW', (payload) => {
+        if (this.isProcessingNetworkEvent) return
+
+        const order = payload as Order
+        // Only Host broadcasts new orders they generated
+        const players = this.realtimeManager?.getPlayers() || []
+        const isHost = players.length > 0 && players[0].id === playerId
+
+        if (isHost) {
+          this.realtimeManager?.broadcastGameEvent('ORDER_NEW', order)
+        }
+      })
+
+      bus.on('ORDER_COMPLETED', (payload: any) => {
+        if (this.isProcessingNetworkEvent) return
+        this.realtimeManager?.broadcastGameEvent('ORDER_COMPLETED', payload)
+      })
+
       this.realtimeManager.onPlayerJoin = (id) => {
         console.log('Remote player joined:', id)
-        // We'll spawn them, but we need their character ID.
-        // For now, spawn with default, update later via broadcast?
-        // Or wait for 'sync' state?
-        // RealtimeManager 'sync' event handles state updates.
-        // Actually, onPlayerJoin is just a trigger. we rely on state updates.
         this.characterManager.spawnRemoteCharacter(id, 400, 600)
       }
 
       this.realtimeManager.onPlayerStateUpdate = (state) => {
-        // Handle textureId update if passed (not yet in state payload, but good future proof)
         this.characterManager.updateRemoteCharacter(
           state.id,
           state.x,
@@ -101,6 +171,29 @@ export class KitchenScene extends Container {
     Ticker.shared.add((ticker: Ticker) => {
       this.tutorialManager.update()
       InputManager.getInstance().update()
+      // this.gameHUD.update(ticker.elapsedMS) --> Removed
+
+      // Handle Game Timer (Host Logic mostly, but client simulates too)
+      if (this.isGameRunning) {
+        this.timeRemaining -= ticker.elapsedMS
+        if (this.timeRemaining <= 0) {
+          this.timeRemaining = 0
+          this.isGameRunning = false
+
+          // Host triggers Game Over
+          if (
+            this.realtimeManager &&
+            this.realtimeManager.getPlayers().length > 0 &&
+            this.realtimeManager.getPlayers()[0].id === playerId
+          ) {
+            const currentScore = useGameStore.getState().score
+            this.realtimeManager.broadcastGameEvent('GAME_OVER', { score: currentScore })
+            useGameStore.getState().setGameOver(true)
+          }
+        }
+        // Sync Time to Store (throttled slightly if performance issue, but 60fps React update is fine for simple overlay)
+        useGameStore.getState().setTime(this.timeRemaining)
+      }
 
       // Broadcast state
       if (this.realtimeManager && this.characterManager) {

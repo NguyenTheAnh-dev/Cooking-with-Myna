@@ -3,7 +3,8 @@ import { EventBus } from '../core/EventBus'
 export interface Order {
   id: string
   recipeId: string
-  timeLeft: number
+  timeRemaining: number // seconds
+  totalTime: number // seconds
   status: 'pending' | 'completed' | 'failed'
 }
 
@@ -11,16 +12,32 @@ export class OrderManager {
   private orders: Order[] = []
   private orderIdCounter = 0
   private maxOrders = 4 // Default for 2 players
-  private generationInterval = 6000 // 6 seconds per order
+  private generationIntervalMs = 6000 // 6 seconds per order
+  private generationTimer: NodeJS.Timeout | null = null
 
   constructor(difficultyMultiplier: number = 1) {
     // Adjust based on difficulty/players
     // E.g., multiplier 1 = Normal (2 players)
     this.maxOrders = Math.floor(4 * difficultyMultiplier)
-    this.generationInterval = Math.floor(6000 / difficultyMultiplier)
+    this.generationIntervalMs = Math.floor(6000 / difficultyMultiplier)
+  }
 
-    // Auto-generate orders for demo
-    setInterval(() => this.generateOrder(), this.generationInterval)
+  public startGeneration() {
+    if (this.generationTimer) clearInterval(this.generationTimer)
+    this.generateOrder() // Generate one immediately
+    this.generationTimer = setInterval(() => this.generateOrder(), this.generationIntervalMs)
+  }
+
+  public stopGeneration() {
+    if (this.generationTimer) {
+      clearInterval(this.generationTimer)
+      this.generationTimer = null
+    }
+  }
+
+  public addOrder(order: Order) {
+    this.orders.push(order)
+    EventBus.getInstance().emit('ORDER_NEW', order)
   }
 
   public getOrders(): Order[] {
@@ -37,7 +54,7 @@ export class OrderManager {
     return false
   }
 
-  private generateOrder() {
+  public generateOrder() {
     if (this.orders.length >= this.maxOrders) return
 
     const recipes = ['tomato_soup', 'steak'] // Matches RecipeSystem keys
@@ -46,7 +63,8 @@ export class OrderManager {
     const newOrder: Order = {
       id: `order-${++this.orderIdCounter}`,
       recipeId: randomRecipe,
-      timeLeft: 60,
+      timeRemaining: 60,
+      totalTime: 60,
       status: 'pending',
     }
 
