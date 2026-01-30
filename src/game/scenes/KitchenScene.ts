@@ -1,24 +1,28 @@
 import { Container, Sprite, Texture, Ticker } from 'pixi.js'
-import { EventBus } from '../core/EventBus'
-import { useGameStore } from '../../stores/useGameStore'
+import { ParticleManager } from '../managers/ParticleManager'
+import { FeedbackManager } from '../managers/FeedbackManager'
 import { CharacterManager } from '../managers/CharacterManager'
 import { DishManager } from '../managers/DishManager'
-import { GameLoop } from '../core/GameLoop'
-import { Station } from '../entities/Station'
 import { OrderManager, Order } from '../systems/OrderManager'
+import { Station } from '../entities/Station'
+import { RealtimeManager } from '../network/RealtimeManager'
 import { TutorialManager } from '../tutorial/TutorialManager'
-import { setupBasicTutorial } from '../tutorial/steps/TutorialSequence'
-import { KitchenLoader } from '../editor/KitchenLoader'
-import { PointerController } from '../input/PointerController'
-import { InputManager } from '../input/InputManager'
 import { KitchenLayout } from '../types/KitchenLayout'
 import level1 from '../data/level_1.json'
-import { RealtimeManager } from '../network/RealtimeManager'
+import { useGameStore } from '../store/gameStore'
+import { PointerController } from '../input/PointerController'
+import { InputManager } from '../input/InputManager'
+import { EventBus } from '../core/EventBus'
+import { KitchenLoader } from '../editor/KitchenLoader'
+import { GameLoop } from '../core/GameLoop'
+import { setupBasicTutorial } from '../tutorial/steps/TutorialSequence'
 
 export class KitchenScene extends Container {
   public characterManager: CharacterManager
   public orderManager: OrderManager
   public dishManager: DishManager
+  public particleManager!: ParticleManager
+  public feedbackManager!: FeedbackManager
   public stations: Station[] = []
   public realtimeManager: RealtimeManager | null = null
   // public gameHUD: GameHUD  <-- Removed
@@ -58,6 +62,8 @@ export class KitchenScene extends Container {
     this.characterManager = new CharacterManager(this)
     this.dishManager = new DishManager(this)
     this.tutorialManager = new TutorialManager(this)
+
+    this.setupVisuals()
 
     // Start game logic (Host vs Client logic handled below)
     this.isGameRunning = true
@@ -171,9 +177,15 @@ export class KitchenScene extends Container {
 
     // Use Ticker to drive the validation
     Ticker.shared.add((ticker: Ticker) => {
+      this.particleManager.update(ticker.deltaTime / 60) // ticker.deltaTime is frames, rough approx or we use elapsedMS?
+      // Better use elapsedMS/1000 for seconds
+      const dt = ticker.elapsedMS / 1000
+      this.particleManager.update(dt)
+      this.feedbackManager.update(dt)
+
       this.tutorialManager.update()
       InputManager.getInstance().update()
-      // this.gameHUD.update(ticker.elapsedMS) --> Removed
+      this.characterManager.update(dt)
 
       // Handle Game Timer (Host Logic mostly, but client simulates too)
       if (this.isGameRunning) {
@@ -220,6 +232,39 @@ export class KitchenScene extends Container {
     })
   }
 
+  private setupVisuals() {
+    this.particleManager = new ParticleManager()
+    this.feedbackManager = new FeedbackManager()
+
+    // Add to scene - Ensure particles are below characters but feedback is on top
+    this.addChildAt(this.particleManager, 1) // Above background
+    this.addChild(this.feedbackManager) // On top of everything
+
+    // Setup Event Listeners
+    const bus = EventBus.getInstance()
+
+    bus.on('ORDER_COMPLETED', () => {
+      // Find where to spawn? Maybe center screen or generic
+      this.feedbackManager.spawnFloatingText('+100', 600, 100, '#ffff00')
+      this.particleManager.spawn('sparkle', 600, 100, 10)
+    })
+
+    bus.on('STATION_COOKING_TICK', (payload: unknown) => {
+      const p = payload as { x: number; y: number }
+      // payload: { stationId, stationX, stationY }
+      if (Math.random() < 0.1) {
+        // 10% chance per tick to spawn smoke
+        this.particleManager.spawn('smoke', p.x, p.y - 40, 1)
+      }
+    })
+
+    bus.on('STATION_BURNT', (payload: unknown) => {
+      const p = payload as { x: number; y: number }
+      this.particleManager.spawn('fire', p.x, p.y - 40, 5)
+      this.feedbackManager.spawnFloatingText('BURNT!', p.x, p.y - 60, '#ff0000')
+    })
+  }
+
   public setupSystems(gameLoop: GameLoop) {
     gameLoop.movementSystem.setManager(this.characterManager)
     gameLoop.actionSystem.setManager(this.characterManager)
@@ -229,7 +274,7 @@ export class KitchenScene extends Container {
     const bgContainer = new Container()
 
     // 1. Draw Floor (Image)
-    const texture = Texture.from('/assets/backgrounds/bg_level_1.png')
+    const texture = Texture.from('/backgrounds/bg_level_1.png')
     const bgSprite = new Sprite(texture)
 
     // Scale to fit or cover the screen area (800x600 for now)

@@ -1,4 +1,4 @@
-export type CharacterState = 'idle' | 'walk' | 'cook' | 'carry'
+export type CharacterState = 'idle' | 'walk' | 'cook' | 'carry' | 'chop'
 
 export type Direction = 'left' | 'right'
 

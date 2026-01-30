@@ -44,10 +44,15 @@ export class CookingSystem {
 
       if (!step) return
 
-      const duration = step.duration || 3
-
       // Increase progress
+      const duration = step.duration || 3
       station.progress += dt / duration
+
+      EventBus.getInstance().emit('STATION_COOKING_TICK', {
+        stationId: station.id,
+        x: station.x,
+        y: station.y,
+      })
 
       if (station.progress >= 1) {
         // Cooking Complete
@@ -56,7 +61,8 @@ export class CookingSystem {
 
         // Update Item State
         currentItem.state = step.nextState
-        // Visual update could happen here (change sprite to cooked)
+        console.log(`[CookingSystem] ${station.id} finished processing item!`)
+
         EventBus.getInstance().emit('COOKING_COMPLETED', {
           stationId: station.id,
           item: currentItem,
@@ -75,23 +81,35 @@ export class CookingSystem {
       // Initialize burning
       if (station.status === 'completed') {
         station.status = 'burning'
-        station.progress = 0
+        station.progress = 0 // Wait, logic in Station.ts handles progress > 1 visual.
+        // But here we reset it?
+        // If we want progress bar to go green -> red, we should probably Keep progress at 1 and add to it?
+        // Station.ts logic: if (this.status === 'burning' || this.progress > 1)
+
+        // Let's change strategy: Continue progress from 1.0 to 2.0
+        station.status = 'burning'
+        // progress is already 1.0
       }
 
-      const burnTime = station.burnDuration
+      const burnTime = station.burnDuration || 5
+      // rate to go from 1.0 to 2.0 in burnTime seconds
+      station.progress += dt / burnTime
 
-      if (station.status === 'burning') {
-        station.progress += dt / burnTime
+      if (station.progress >= 2) {
+        station.status = 'burnt'
+        station.progress = 1 // Reset to full bar (Gray)
+        station.processedItem!.state = 'burnt'
+        console.log(`[CookingSystem] ${station.id} BURNT the food!`)
+        EventBus.getInstance().emit('STATION_BURNT', {
+          stationId: station.id,
+          x: station.x,
+          y: station.y,
+        })
 
-        if (station.progress >= 1) {
-          station.status = 'burnt'
-          station.progress = 1
-          station.processedItem!.state = 'burnt'
-          EventBus.getInstance().emit('ITEM_BURNT', {
-            stationId: station.id,
-            item: station.processedItem,
-          })
-        }
+        EventBus.getInstance().emit('ITEM_BURNT', {
+          stationId: station.id,
+          item: station.processedItem,
+        })
       }
     }
   }

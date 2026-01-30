@@ -25,7 +25,7 @@ export class CharacterManager {
     if (config.isAI) {
       char = new AINPC(config.id, config.textureId, this.scene)
     } else {
-      char = new Character(config.id, config.speed)
+      char = new Character(config.id, config.speed, config.textureId)
     }
 
     // config properties accessed directly below

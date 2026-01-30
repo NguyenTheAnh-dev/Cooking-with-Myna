@@ -22,17 +22,16 @@ export class Character extends Container {
 
   private readonly CHARACTER_SCALE = 0.5
 
-  constructor(id: string, speed: number = 200) {
+  constructor(id: string, speed: number = 200, textureId: string = 'char-girl-1') {
     // Speed in px/sec
     super()
     this.id = id
     this.speed = speed
 
-    // Load texture
-    const texture = Texture.from('/assets/characters/char-girl-1.png')
+    // Load texture based on provided textureId
+    const texture = Texture.from(`/characters/${textureId}.png`)
     this.sprite = new Sprite(texture)
     this.sprite.anchor.set(0.5)
-    this.sprite.scale.set(0.5) // Adjust scale as needed for the new assets, 1)
     this.sprite.scale.set(this.CHARACTER_SCALE)
 
     this.addChild(this.sprite)
@@ -64,7 +63,36 @@ export class Character extends Container {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public update(_dt: number) {
-    // Base update logic
+  public update(dt: number) {
+    // Determine if moving
+    const isMoving = Math.abs(this.velocity.x) > 0.1 || Math.abs(this.velocity.y) > 0.1
+
+    if (isMoving) {
+      // Waddle Effect
+      const wobbleSpeed = 15
+      const wobbleAmount = 0.1
+      const time = Date.now() / 1000
+
+      // Wobble rotation
+      this.sprite.rotation = Math.sin(time * wobbleSpeed) * wobbleAmount
+
+      // Bobbing Y
+      // this.sprite.y = -Math.abs(Math.sin(time * wobbleSpeed)) * 5
+    } else {
+      // Return to neutral
+      this.sprite.rotation = 0
+      // this.sprite.y = 0
+    }
+
+    // Action Animation
+    if (this.state === 'chop') {
+      const chopSpeed = 20
+      const time = Date.now() / 1000
+      // Chop motion (scale Y squish)
+      // this.sprite.scale.y = this.CHARACTER_SCALE * (1 + Math.sin(time * chopSpeed) * 0.1)
+      this.sprite.rotation = Math.sin(time * chopSpeed) * 0.2 // Agressive wobble
+    } else if (this.state !== 'carry') {
+      // Reset if not carrying (carrying might have its own static pose)
+    }
   }
 }

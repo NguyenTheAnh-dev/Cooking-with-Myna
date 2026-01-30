@@ -1,4 +1,4 @@
-import { Container, Graphics } from 'pixi.js'
+import { Container, Graphics, Sprite, Texture } from 'pixi.js'
 import { Item } from './Item'
 
 export type StationType =
@@ -37,24 +37,42 @@ export class Station extends Container {
   }
 
   private draw() {
-    const g = new Graphics()
+    // Map station type to sprite filename
+    const spriteMap: Record<StationType, string | null> = {
+      stove: 'stove',
+      cut: 'cutting_board',
+      sink: 'sink',
+      plate: 'plate',
+      fridge: 'fridge',
+      counter: null, // No sprite, use fallback
+      serve: null, // No sprite, use fallback
+      trash: null, // No sprite, use fallback
+      dish_return: null, // No sprite, use fallback
+    }
 
-    // Color code stations
-    let color = 0x95a5a6
-    if (this.type === 'stove') color = 0xe74c3c // Red
-    if (this.type === 'cut') color = 0xf1c40f // Yellow
-    if (this.type === 'sink') color = 0x3498db // Blue
-    if (this.type === 'serve') color = 0x2ecc71 // Green
-    if (this.type === 'fridge') color = 0x9b59b6 // Purple-ish
-    if (this.type === 'trash') color = 0x7f8c8d // Gray
-    if (this.type === 'dish_return') color = 0xe67e22 // Orange
-    if (this.type === 'plate') color = 0xecf0f1 // Light gray
+    const spriteName = spriteMap[this.type]
 
-    g.rect(-40, -40, 80, 80)
-    g.fill(color)
-    g.stroke({ width: 2, color: 0x2c3e50 })
+    if (spriteName) {
+      // Use sprite
+      const texture = Texture.from(`/sprites/stations/${spriteName}.png`)
+      const sprite = new Sprite(texture)
+      sprite.anchor.set(0.5)
+      sprite.scale.set(0.5) // Adjust scale as needed
+      this.addChild(sprite)
+    } else {
+      // Fallback to colored rectangle for stations without sprites
+      const g = new Graphics()
+      let color = 0x95a5a6
+      if (this.type === 'serve') color = 0x2ecc71 // Green
+      if (this.type === 'trash') color = 0x7f8c8d // Gray
+      if (this.type === 'dish_return') color = 0xe67e22 // Orange
+      if (this.type === 'counter') color = 0xbdc3c7 // Light gray
 
-    this.addChild(g)
+      g.rect(-40, -40, 80, 80)
+      g.fill(color)
+      g.stroke({ width: 2, color: 0x2c3e50 })
+      this.addChild(g)
+    }
 
     // Init progress bar container
     this.progressBar = new Graphics()
@@ -81,12 +99,32 @@ export class Station extends Container {
     let color = 0x00ff00 // Green
     let fillPct = this.progress
 
-    if (this.status === 'burning') {
+    if (this.status === 'burning' || this.progress > 1) {
+      // Transition from Green (1) to Red (2)
       color = 0xff0000 // Red alert
-      // Maybe pulse or shake?
-    } else if (this.status === 'completed') {
-      color = 0x00ff00 // Solid Green
-      fillPct = 1
+
+      // If we use progress 1->2 for burning phase
+      if (this.status === 'completed') {
+        // It's technically 'overcooking' but status says completed until fully burnt
+        // Let's visualize the overcook phase
+        fillPct = this.progress - 1 // 0 to 1 scaling of red bar over green?
+        // Actually simpler: Just show Red Bar filling up?
+      }
+    }
+
+    if (this.status === 'completed') {
+      color = 0x00ff00 // Green
+      if (this.progress > 1) {
+        // Overcooking phase
+        color = 0xff4500 // Orange/Red warning
+        fillPct = this.progress - 1
+
+        // Draw Green background first?
+        this.progressBar.rect(x, y, w, h)
+        this.progressBar.fill(0x00ff00)
+      } else {
+        fillPct = 1
+      }
     } else if (this.status === 'burnt') {
       color = 0x555555 // Burnt Gray
       fillPct = 1
