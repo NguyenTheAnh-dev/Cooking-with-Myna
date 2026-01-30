@@ -1,4 +1,4 @@
-import { Container, Sprite, Application, Texture, Ticker } from 'pixi.js'
+import { Container, Sprite, Texture, Ticker } from 'pixi.js'
 import { EventBus } from '../core/EventBus'
 import { useGameStore } from '../../stores/useGameStore'
 import { CharacterManager } from '../managers/CharacterManager'
@@ -101,15 +101,17 @@ export class KitchenScene extends Container {
         this.isProcessingNetworkEvent = true
         try {
           if (type === 'ORDER_NEW') {
-            this.orderManager.addOrder(payload)
-            useGameStore.getState().addOrder(payload) // Sync to UI
+            this.orderManager.addOrder(payload as Order)
+            useGameStore.getState().addOrder(payload as Order) // Sync to UI
           } else if (type === 'GAME_OVER') {
+            const data = payload as { score: number }
             this.isGameRunning = false
             useGameStore.getState().setGameOver(true)
-            useGameStore.getState().setScore(payload.score)
+            useGameStore.getState().setScore(data.score)
             this.orderManager.stopGeneration()
           } else if (type === 'ORDER_COMPLETED') {
-            this.orderManager.completeOrder(payload.recipeId)
+            const data = payload as { recipeId: string }
+            this.orderManager.completeOrder(data.recipeId)
             // Score update is handled by OrderManager callback or separate event?
             // We need to sync score.
             // For now, let's assume Host broadcasts score update or we calc locally.
@@ -134,7 +136,7 @@ export class KitchenScene extends Container {
         }
       })
 
-      bus.on('ORDER_COMPLETED', (payload: any) => {
+      bus.on('ORDER_COMPLETED', (payload: unknown) => {
         if (this.isProcessingNetworkEvent) return
         this.realtimeManager?.broadcastGameEvent('ORDER_COMPLETED', payload)
       })

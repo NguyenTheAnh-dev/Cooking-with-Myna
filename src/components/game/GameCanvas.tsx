@@ -35,7 +35,7 @@ export default function GameCanvas({ roomId = null, playerId = 'guest-' + Math.f
         ; (gameApp as { destroy: () => void }).destroy()
       }
     }
-  }, [roomId, playerId])
+  }, [roomId, playerId, characterId])
 
   return <div ref={containerRef} className="w-full h-screen bg-slate-900 overflow-hidden" />
 }

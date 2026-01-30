@@ -63,8 +63,15 @@ export function RoomScreen({ roomId }: RoomScreenProps) {
                     const newState = channel.presenceState()
                     const activePlayers: Player[] = []
 
-                    Object.values(newState).forEach((presences: any) => {
-                        presences.forEach((presence: any) => {
+                    Object.values(newState).forEach((presences: unknown) => {
+                        const presenceList = presences as {
+                            userId: string
+                            name: string
+                            characterId?: string
+                            isReady?: boolean
+                            online_at?: string
+                        }[]
+                        presenceList.forEach((presence) => {
                             activePlayers.push({
                                 userId: presence.userId,
                                 name: presence.name || 'Chef', // Simplified name for now

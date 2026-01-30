@@ -5,8 +5,10 @@ export interface RecipeStep {
   requiredItem: ItemType
   requiredState: CookingState
   station: StationType
-  action: 'chop' | 'cook' | 'plate' | 'serve'
+  action: 'chop' | 'cook' | 'plate' | 'serve' | 'idle'
   nextState: CookingState
+  duration: number // Processing time in seconds
+  burnDuration?: number // Optional: Time before overcooked/burnt
 }
 
 export interface Recipe {
@@ -34,6 +36,8 @@ export class RecipeSystem {
           station: 'stove',
           action: 'cook',
           nextState: 'cooked',
+          duration: 3,
+          burnDuration: 5,
         },
         {
           requiredItem: 'tomato',
@@ -41,6 +45,7 @@ export class RecipeSystem {
           station: 'plate',
           action: 'plate',
           nextState: 'plated',
+          duration: 0.5, // Instant plating
         },
       ],
     })
@@ -57,6 +62,8 @@ export class RecipeSystem {
           station: 'stove',
           action: 'cook',
           nextState: 'cooked',
+          duration: 5,
+          burnDuration: 4,
         },
       ],
     })
@@ -64,6 +71,10 @@ export class RecipeSystem {
 
   static getRecipe(id: string): Recipe | undefined {
     return this.recipes.get(id)
+  }
+
+  static getAllRecipes(): Map<string, Recipe> {
+    return this.recipes
   }
 
   /**

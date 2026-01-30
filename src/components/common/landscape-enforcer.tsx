@@ -4,33 +4,36 @@ import { useEffect, useState } from "react"
 import { Smartphone } from "lucide-react"
 
 export function LandscapeEnforcer() {
-    const [isPortrait, setIsPortrait] = useState(false)
+    const [isLandscape, setIsLandscape] = useState(true) // Default to true (assume valid) to avoid flash
 
     useEffect(() => {
         const checkOrientation = () => {
-            const portrait = window.matchMedia("(orientation: portrait)").matches
-            setIsPortrait(portrait)
+            // Basic check: is width > height?
+            const isLand = window.innerWidth > window.innerHeight
+            setIsLandscape(isLand)
         }
 
         checkOrientation()
 
-        const mediaQuery = window.matchMedia("(orientation: portrait)")
-        const handleChange = (e: MediaQueryListEvent) => setIsPortrait(e.matches)
+        window.addEventListener("resize", checkOrientation)
+        window.addEventListener("orientationchange", checkOrientation)
 
-        mediaQuery.addEventListener("change", handleChange)
-
-        return () => mediaQuery.removeEventListener("change", handleChange)
+        return () => {
+            window.removeEventListener("resize", checkOrientation)
+            window.removeEventListener("orientationchange", checkOrientation)
+        }
     }, [])
 
-    if (!isPortrait) return null
+    if (isLandscape) return null
 
     const handleAttemptRotate = async () => {
         try {
             if (document.documentElement.requestFullscreen) {
                 await document.documentElement.requestFullscreen()
             }
-            if (screen.orientation && (screen.orientation as any).lock) {
-                await (screen.orientation as any).lock("landscape")
+            const orientation = screen.orientation as unknown as { lock: (orientation: string) => Promise<void> }
+            if (screen.orientation && orientation.lock) {
+                await orientation.lock("landscape")
             }
         } catch (err) {
             console.log("Rotation/Fullscreen not supported or blocked:", err)
@@ -38,7 +41,7 @@ export function LandscapeEnforcer() {
     }
 
     return (
-        <div className="fixed inset-0 z-9999 bg-background/95 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 md:hidden">
+        <div className="fixed inset-0 z-[9999] bg-background/95 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 md:hidden">
             <div className="animate-bounce mb-8">
                 <Smartphone className="w-24 h-24 text-primary rotate-90" />
             </div>

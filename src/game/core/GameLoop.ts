@@ -54,6 +54,6 @@ export class GameLoop {
     this.actionSystem.update(dt)
     this.movementSystem.update(dt)
     this.collisionSystem.update()
-    this.cookingSystem.update()
+    this.cookingSystem.update(dt)
   }
 }

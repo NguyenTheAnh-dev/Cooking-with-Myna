@@ -28,6 +28,7 @@ export class CharacterManager {
       char = new Character(config.id, config.speed)
     }
 
+    // config properties accessed directly below
     char.x = config.startPosition.x
     char.y = config.startPosition.y
     if (config.speed) char.speed = config.speed
@@ -44,7 +45,7 @@ export class CharacterManager {
     return Array.from(this.characters.values())
   }
 
-  public spawnRemoteCharacter(id: string, x: number, y: number, textureId: string = 'char-girl-1') {
+  public spawnRemoteCharacter(id: string, x: number, y: number) {
     if (this.characters.has(id)) return
 
     const char = new Character(id)

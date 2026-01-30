@@ -62,8 +62,9 @@ export class Perception {
         requiredItem: firstStep.requiredItem,
         requiredState: 'raw',
         station: 'counter', // Assuming counters have ingredients spawning
-        action: 'chop', // Dummy action
+        action: 'idle', // Changed to idle/spawn action
         nextState: 'raw', // Just fetching
+        duration: 0,
       }
     }
 

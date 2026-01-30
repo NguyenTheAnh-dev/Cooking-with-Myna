@@ -16,7 +16,15 @@ export class Station extends Container {
   public id: string
   public type: StationType
   public isOccupied: boolean = false
-  public processedItem: Item | null = null // Todo: Type with Item
+  public processedItem: Item | null = null
+
+  // Cooking State
+  public progress: number = 0
+  public status: 'idle' | 'cooking' | 'completed' | 'burning' | 'burnt' = 'idle'
+  public burnDuration: number = 5 // Default burn duration
+
+  // Visuals
+  private progressBar: Graphics | null = null
 
   constructor(id: string, type: StationType, x: number, y: number) {
     super()
@@ -47,5 +55,45 @@ export class Station extends Container {
     g.stroke({ width: 2, color: 0x2c3e50 })
 
     this.addChild(g)
+
+    // Init progress bar container
+    this.progressBar = new Graphics()
+    this.addChild(this.progressBar)
+  }
+
+  public updateProgressBar() {
+    if (!this.progressBar) return
+    this.progressBar.clear()
+
+    if (this.status === 'idle') return
+
+    // Bar Dimensions
+    const w = 60
+    const h = 10
+    const x = -30
+    const y = -50
+
+    // Background
+    this.progressBar.rect(x, y, w, h)
+    this.progressBar.fill(0x000000)
+
+    // Foreground Color
+    let color = 0x00ff00 // Green
+    let fillPct = this.progress
+
+    if (this.status === 'burning') {
+      color = 0xff0000 // Red alert
+      // Maybe pulse or shake?
+    } else if (this.status === 'completed') {
+      color = 0x00ff00 // Solid Green
+      fillPct = 1
+    } else if (this.status === 'burnt') {
+      color = 0x555555 // Burnt Gray
+      fillPct = 1
+    }
+
+    // Fill
+    this.progressBar.rect(x, y, w * fillPct, h)
+    this.progressBar.fill(color)
   }
 }

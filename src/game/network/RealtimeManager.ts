@@ -12,7 +12,7 @@ export class RealtimeManager {
   public onPlayerStateUpdate: ((state: PlayerState) => void) | null = null
   public onPlayerJoin: ((id: string) => void) | null = null
   public onPlayerLeave: ((id: string) => void) | null = null
-  public onGameEvent: ((type: string, payload: any) => void) | null = null
+  public onGameEvent: ((type: string, payload: unknown) => void) | null = null
   public onPresenceSync: (() => void) | null = null
 
   constructor(roomId: string, playerId: string) {
@@ -80,28 +80,39 @@ export class RealtimeManager {
     })
   }
 
-  public broadcastGameEvent(type: string, data: any) {
+  public broadcastGameEvent(type: string, payload: unknown) {
     if (!this.channel) return
 
     this.channel.send({
       type: 'broadcast',
       event: 'game_event',
-      payload: { type, data },
+      payload: { type, payload },
     })
   }
 
-  public getPlayers() {
+  // --- Helpers ---
+
+  public getPlayers(): { id: string; state: unknown }[] {
     if (!this.channel) return []
+
+    // Access internal presence state safely
     const state = this.channel.presenceState()
-    const players: any[] = []
-    Object.values(state).forEach((presences: any) => {
-      presences.forEach((p: any) => players.push(p))
-    })
-    // Sort by join time
-    return players.sort((a, b) => {
-      const timeA = a.online_at ? new Date(a.online_at).getTime() : 0
-      const timeB = b.online_at ? new Date(b.online_at).getTime() : 0
-      return timeA - timeB
-    })
+    const players: { id: string; state: unknown }[] = []
+
+    // Map presence state to a list of players
+    for (const key in state) {
+      // Each key is a user ID (or internal socket ref), value is array of presences
+      const presences = state[key]
+      if (presences && presences.length > 0) {
+        // We assume 1 presence per user for now
+        const userPresence = presences[0] as unknown as { user_id: string; [key: string]: unknown }
+        players.push({
+          id: userPresence.user_id, // Ensure we track user_id in track()
+          state: userPresence,
+        })
+      }
+    }
+
+    return players
   }
 }

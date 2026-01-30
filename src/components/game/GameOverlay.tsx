@@ -1,15 +1,14 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Progress } from '@/components/ui/progress'
 import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useGameStore } from '@/stores/useGameStore'
 import { Star, Clock } from 'lucide-react'
 
 export function GameOverlay() {
-    const { score, timeLeft, orders, isGameOver, resetGame } = useGameStore()
+    const { score, timeLeft, orders, isGameOver } = useGameStore()
     const [maxTime] = useState(180000) // 3 minutes total
 
     // Format time mm:ss

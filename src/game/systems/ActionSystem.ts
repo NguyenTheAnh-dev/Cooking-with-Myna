@@ -34,7 +34,7 @@ export class ActionSystem {
     eventBus.on('PLAYER_MOVE', (p) => this.handleMove(p))
     eventBus.on('INPUT_MOVE', (p) => this.handleInputMove(p as InputMovePayload))
     eventBus.on('INPUT_INTERACT', (p) => this.handleInteract(p as InteractPayload))
-    eventBus.on('INPUT_INTERACT_RELEASE', (p) => this.handleInteractRelease(p as InteractPayload))
+    eventBus.on('INPUT_INTERACT_RELEASE', () => this.handleInteractRelease())
   }
 
   private handleInputMove(payload: InputMovePayload) {
@@ -116,7 +116,20 @@ export class ActionSystem {
         this.handlePlateStationInteract(payload.characterId)
         break
       default:
-        // Other station interactions handled elsewhere
+        // Generic Station Interaction (Stove, Cut, etc)
+        // If station has an item and is idle, start cooking/processing
+        if (nearestStation.isOccupied && nearestStation.status === 'idle') {
+          // Tap to start
+          nearestStation.status = 'cooking'
+          console.log(`[ActionSystem] Started cooking at ${nearestStation.id}`)
+        } else if (nearestStation.status === 'completed' || nearestStation.status === 'burnt') {
+          // Tap to pick up (if needed, currently maybe automatic?)
+          // For now, let's say tap to stop burning if completed?
+          // Or actually, picking up is usually bumping into it or separate button.
+          // Let's assume Tap also picks up if cooked?
+          // For MVP: Tap toggle start
+        }
+
         EventBus.getInstance().emit('STATION_INTERACT', {
           characterId: payload.characterId,
           stationId: nearestStation.id,
@@ -126,24 +139,19 @@ export class ActionSystem {
   }
 
   /**
-   * Handle interact button release (for hold actions like washing)
+   * Handle interact button release (No-op now for Tap-to-Start)
    */
-  private handleInteractRelease(payload: InteractPayload) {
-    const washData = this.washingState.get(payload.characterId)
-    if (washData) {
-      // Cancel washing if released early
-      washData.plate.cancelWashing()
-      this.washingState.delete(payload.characterId)
-      console.log(`[ActionSystem] Washing cancelled by ${payload.characterId}`)
-    }
+  private handleInteractRelease() {
+    // Deprecated Hold Logic
   }
 
   private handleSinkInteract(characterId: string, station: Station) {
     const char = this.characterManager?.getCharacter(characterId)
     if (!char) return
 
-    // Check if character is holding a dirty plate (via holdingItem which could be a Plate)
-    // For simplicity, check if there are dirty plates and character is at sink
+    // Logic for washing: Tap to start washing?
+    // If dirty plate count > 0, start washing instantly or process bar?
+    // Let's keep existing logic but maybe add process bar integration later
     if (this.dishManager && this.dishManager.getDirtyPlateCount() > 0) {
       const dirtyPlate = this.dishManager.pickupDirtyPlate()
       if (dirtyPlate) {
