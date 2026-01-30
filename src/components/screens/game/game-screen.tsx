@@ -7,13 +7,15 @@ interface GameScreenProps {
     roomId?: string | null
     playerId: string
     characterId?: string
+    levelId?: number
 }
 
-export function GameScreen({ roomId, playerId, characterId }: GameScreenProps) {
+export function GameScreen({ roomId, playerId, characterId, levelId }: GameScreenProps) {
     return (
         <main className="w-full h-screen relative">
             <GameOverlay />
-            <GameCanvas roomId={roomId} playerId={playerId} characterId={characterId} />
+            <GameCanvas roomId={roomId} playerId={playerId} characterId={characterId} levelId={levelId} />
         </main>
     )
 }
+

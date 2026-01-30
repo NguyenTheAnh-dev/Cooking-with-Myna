@@ -16,6 +16,7 @@ import { EventBus } from '../core/EventBus'
 import { KitchenLoader } from '../editor/KitchenLoader'
 import { GameLoop } from '../core/GameLoop'
 import { setupBasicTutorial } from '../tutorial/steps/TutorialSequence'
+import { LevelSystem } from '../systems/LevelSystem'
 
 export class KitchenScene extends Container {
   public characterManager: CharacterManager
@@ -30,6 +31,7 @@ export class KitchenScene extends Container {
 
   public tutorialManager: TutorialManager
   private currentLevel: KitchenLayout
+  private levelId: number
 
   // Sync Flag to prevent broadcast loops
   private isProcessingNetworkEvent: boolean = false
@@ -41,17 +43,19 @@ export class KitchenScene extends Container {
   private timeRemaining: number = 180000 // 3 mins default
   private isGameRunning: boolean = false
 
-  constructor(
-    roomId: string | null,
-    playerId: string,
-    levelConfig: KitchenLayout | null = null,
-    characterId?: string
-  ) {
+  constructor(roomId: string | null, playerId: string, levelId: number = 1, characterId?: string) {
     super()
 
-    // Setup Managers
-    this.currentLevel = levelConfig || (level1 as KitchenLayout)
-    this.orderManager = new OrderManager()
+    // Setup Level from LevelSystem
+    this.levelId = levelId
+    const levelConfig = LevelSystem.getLevelConfig(levelId)
+    this.timeRemaining = levelConfig.timeLimit
+
+    // For now, all levels use level1.json station layout
+    // TODO: Create separate level_X.json files with unique station layouts
+    this.currentLevel = level1 as KitchenLayout
+
+    this.orderManager = new OrderManager(levelId)
 
     // Draw background (Hit Area for Tap-to-Move)
     this.background = this.drawBackground()
@@ -273,12 +277,14 @@ export class KitchenScene extends Container {
   private drawBackground(): Container {
     const bgContainer = new Container()
 
-    // 1. Draw Floor (Image)
-    const texture = Texture.from('/backgrounds/bg_level_1.png')
+    // Get background path from LevelSystem
+    const backgroundPath = LevelSystem.getBackgroundPath(this.levelId)
+    console.log(`[KitchenScene] Loading background: ${backgroundPath}`)
+
+    const texture = Texture.from(backgroundPath)
     const bgSprite = new Sprite(texture)
 
-    // Scale to fit or cover the screen area (800x600 for now)
-    // Scale to fit or cover the screen area (800x600 for now)
+    // Scale to fit or cover the screen area
     bgSprite.width = 1200
     bgSprite.height = 800
 

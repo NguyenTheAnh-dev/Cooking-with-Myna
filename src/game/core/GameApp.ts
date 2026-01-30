@@ -1,6 +1,7 @@
 import { Application } from 'pixi.js'
 import { KitchenScene } from '../scenes/KitchenScene'
 import { GameLoop } from './GameLoop'
+import { LevelSystem } from '../systems/LevelSystem'
 
 export class GameApp {
   private static instance: GameApp
@@ -24,7 +25,8 @@ export class GameApp {
     container: HTMLElement,
     roomId: string | null = null,
     playerId: string = 'local-player',
-    characterId?: string
+    characterId?: string,
+    levelId: number = 1
   ) {
     await this.app.init({
       width: 1200,
@@ -36,8 +38,13 @@ export class GameApp {
 
     container.appendChild(this.app.canvas)
 
-    // Load default level (with room info)
-    this.scene = new KitchenScene(roomId, playerId, null, characterId)
+    // Get level config from LevelSystem
+    const levelConfig = LevelSystem.getLevelConfig(levelId)
+    LevelSystem.setCurrentLevel(levelId)
+    console.log(`[GameApp] Loading level ${levelId}: ${levelConfig.name}`)
+
+    // Load scene with level config
+    this.scene = new KitchenScene(roomId, playerId, levelId, characterId)
     this.app.stage.addChild(this.scene)
     this.scene.setupSystems(this.gameLoop)
 

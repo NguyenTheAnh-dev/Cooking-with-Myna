@@ -6,9 +6,15 @@ interface GameCanvasProps {
   roomId?: string | null
   playerId?: string
   characterId?: string
+  levelId?: number
 }
 
-export default function GameCanvas({ roomId = null, playerId = 'guest-' + Math.floor(Math.random() * 1000), characterId }: GameCanvasProps) {
+export default function GameCanvas({
+  roomId = null,
+  playerId = 'guest-' + Math.floor(Math.random() * 1000),
+  characterId,
+  levelId = 1
+}: GameCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -20,11 +26,12 @@ export default function GameCanvas({ roomId = null, playerId = 'guest-' + Math.f
 
       const { GameApp } = await import('@/game/core/GameApp')
       gameApp = GameApp.getInstance()
-      await (gameApp as { initialize: (el: HTMLElement, roomId: string | null, playerId: string, characterId?: string) => Promise<void> }).initialize(
+      await (gameApp as { initialize: (el: HTMLElement, roomId: string | null, playerId: string, characterId?: string, levelId?: number) => Promise<void> }).initialize(
         containerRef.current,
         roomId,
         playerId,
-        characterId
+        characterId,
+        levelId
       )
     }
 
@@ -35,7 +42,8 @@ export default function GameCanvas({ roomId = null, playerId = 'guest-' + Math.f
         ; (gameApp as { destroy: () => void }).destroy()
       }
     }
-  }, [roomId, playerId, characterId])
+  }, [roomId, playerId, characterId, levelId])
 
   return <div ref={containerRef} className="w-full h-screen bg-slate-900 overflow-hidden" />
 }
+
