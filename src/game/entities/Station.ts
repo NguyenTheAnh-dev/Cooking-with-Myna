@@ -1,5 +1,6 @@
 import { Container, Graphics, Sprite, Texture } from 'pixi.js'
-import { Item } from './Item'
+import { Item, ItemType } from './Item'
+import { nanoid } from 'nanoid'
 
 export type StationType =
   | 'stove'
@@ -18,6 +19,9 @@ export class Station extends Container {
   public isOccupied: boolean = false
   public processedItem: Item | null = null
 
+  // Ingredient storage for fridge stations
+  private availableIngredients: ItemType[] = []
+
   // Cooking State
   public progress: number = 0
   public status: 'idle' | 'cooking' | 'completed' | 'burning' | 'burnt' = 'idle'
@@ -33,7 +37,46 @@ export class Station extends Container {
     this.x = x
     this.y = y
 
+    // Stock ingredients if this is a fridge
+    if (type === 'fridge') {
+      this.stockIngredients()
+    }
+
     this.draw()
+  }
+
+  /**
+   * Stock the fridge with available ingredients
+   */
+  public stockIngredients() {
+    this.availableIngredients = ['tomato', 'meat', 'lettuce', 'bread', 'cheese']
+  }
+
+  /**
+   * Take an ingredient from the fridge
+   * Returns item if available, null otherwise
+   */
+  public takeIngredient(type: ItemType): Item | null {
+    if (this.availableIngredients.includes(type)) {
+      const item = new Item(nanoid(), type)
+      console.log(`[Station] Dispensed ${type} from fridge`)
+      return item
+    }
+    // If specific type not found, return first available
+    if (this.availableIngredients.length > 0) {
+      const fallbackType = this.availableIngredients[0]
+      const item = new Item(nanoid(), fallbackType)
+      console.log(`[Station] Dispensed ${fallbackType} from fridge (fallback)`)
+      return item
+    }
+    return null
+  }
+
+  /**
+   * Get list of available ingredients
+   */
+  public getAvailableIngredients(): ItemType[] {
+    return [...this.availableIngredients]
   }
 
   private draw() {
@@ -103,7 +146,7 @@ export class Station extends Container {
       // Transition from Green (1) to Red (2)
       color = 0xff0000 // Red alert
 
-      // If we use progress 1->2 for burning phase
+      // If we use progress 1-> 2 for burning phase
       if (this.status === 'completed') {
         // It's technically 'overcooking' but status says completed until fully burnt
         // Let's visualize the overcook phase

@@ -115,6 +115,9 @@ export class ActionSystem {
       case 'plate':
         this.handlePlateStationInteract(payload.characterId)
         break
+      case 'fridge':
+        this.handleFridgeInteract(payload.characterId, nearestStation)
+        break
       default:
         // Generic Station Interaction (Stove, Cut, etc)
         // If station has an item and is idle, start cooking/processing
@@ -202,6 +205,37 @@ export class ActionSystem {
     } else {
       console.log(`[ActionSystem] No clean plates available!`)
       EventBus.getInstance().emit('NO_CLEAN_PLATES', { characterId })
+    }
+  }
+
+  /**
+   * Handle fridge interaction - pick up ingredient
+   */
+  private handleFridgeInteract(characterId: string, station: Station) {
+    const char = this.characterManager?.getCharacter(characterId)
+    if (!char) return
+
+    // Can't pick up if already holding something
+    if (char.holdingItem) {
+      console.log(`[ActionSystem] Character already holding an item, cannot pick up from fridge`)
+      return
+    }
+
+    // Take first available ingredient (for MVP, could show menu later)
+    const item = station.takeIngredient('tomato')
+    if (item) {
+      char.holdingItem = item
+      char.addChild(item)
+      item.y = -30 // Position above character
+
+      EventBus.getInstance().emit('INGREDIENT_PICKUP', {
+        characterId,
+        itemId: item.id,
+        itemType: item.type,
+      })
+      console.log(`[ActionSystem] ${characterId} picked up ${item.type} from fridge`)
+    } else {
+      console.log(`[ActionSystem] Fridge is empty!`)
     }
   }
 
